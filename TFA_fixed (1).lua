@@ -500,7 +500,7 @@ local function veyronixWindUI()
 		local window = WindUI:CreateWindow({
 			Title = "Veyronix Hub",
 			Author = "Throw Food For Animals",
-			Icon = "rbxassetid://114186159286355",
+			Icon = "rbxassetid://129322863861971",
             IconThemed = false,
 			IconSize = 22,
 			Folder = "VeyronixHub",
