@@ -3723,7 +3723,7 @@ local ok16, result12 = pcall(function()
   veyronixThrowState.farmLbl = v148:Label("Farm: disabled")
 
 
-  -- Auto Farm now uses the configured fixed throw-area position above.\n\n  local function getFindFirstChild3()
+  -- Auto Farm now uses the configured fixed throw-area position above.
     if not v73.ThrowRemotePath then
       return nil
     end
