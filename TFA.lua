@@ -349,8 +349,9 @@ f2("Loading Veyronix Hub...", "interface")
 -- Same surface as the original (Window, Tab, Card, Toggle, Slider, Input, Dropdown,
 -- Button, Label, Divider, Keybind, Toast). If WindUI cannot load, the original UI runs.
 local function veyronixWindUI()
-	local WINDUI_URL = "https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"
-	local WindUI = loadstring(game:HttpGet(WINDUI_URL))()
+	local WindUI = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"
+))()
 
 	if type(WindUI) ~= "table" then
 		error("WindUI did not return a table")
