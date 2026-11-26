@@ -1,0 +1,4914 @@
+local players = game:GetService("Players")
+local coreGui = game:GetService("CoreGui")
+local tweenService = game:GetService("TweenService")
+local runService = game:GetService("RunService")
+local workspaceService = game:GetService("Workspace")
+local guiService = game:GetService("GuiService")
+local userInputService = game:GetService("UserInputService")
+local httpService = game:GetService("HttpService")
+local lighting = game:GetService("Lighting")
+local statsService = game:GetService("Stats")
+local virtualUser = game:GetService("VirtualUser")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local v1 = getgenv and getgenv() or _G
+
+if string.format("%.0f", game.PlaceId) ~= "120219252362013" then
+  return warn("[Veyronix] open Throw Food For Animals before running this hub")
+end
+
+if v1.VEYRONIX_LOADED then
+  local function getVeyronixHub(playerGui)
+    return playerGui
+      and (playerGui:FindFirstChild("VeyronixHub") or playerGui:FindFirstChild("VeyronixKeyGate"))
+  end
+
+  local playerGui2 = players.LocalPlayer:FindFirstChild("PlayerGui")
+  local ok, result = pcall(function() return coreGui end)
+
+  if getVeyronixHub(playerGui2) or ok and getVeyronixHub(result) then
+    return warn("[Veyronix] hub or key screen is already open; use RightShift or the K button")
+  end
+
+  v1.VEYRONIX_LOADED = nil
+end
+
+v1.VEYRONIX_LOADED = true
+local v2
+local create
+local create2
+local connect
+local connect2
+local count = 0
+
+local function f1()
+  count = count + 1
+
+  if create then
+    create:Cancel()
+    create = nil
+  end
+
+  if create2 then
+    create2:Cancel()
+    create2 = nil
+  end
+
+  if connect then
+    connect:Disconnect()
+    connect = nil
+  end
+
+  if connect2 then
+    connect2:Disconnect()
+    connect2 = nil
+  end
+
+  local v3 = v2
+  v2 = nil
+  local create3
+
+  if v3 then
+    create3 = tweenService:Create(v3.frame, TweenInfo.new(
+      0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In
+    ), { Position = UDim2.new(1, 30, 1, 170), GroupTransparency = 1 })
+
+    create3:Play()
+
+    task.delay(0.35, function()
+      create3:Destroy()
+      v3.gui:Destroy()
+    end)
+  end
+end
+
+local function f2(text, p1)
+  local v4 = p1
+  v4 = v4 or "access"
+
+  print("[Veyronix] " .. text)
+
+  local ok2, result2 = pcall(function()
+    local color = v4 == "error" and Color3.fromRGB(240, 90, 90) or Color3.fromRGB(0, 230, 118)
+    local f3, v5, border, v6, v7, v8, v9
+
+    if not v2 then
+      local playerGui3 = players.LocalPlayer:WaitForChild("PlayerGui")
+      local veyronixStartup = playerGui3:FindFirstChild("VeyronixStartup")
+
+      if veyronixStartup then
+        veyronixStartup:Destroy()
+      end
+
+      function f3(p2, map, parent)
+        local instance = Instance.new(p2)
+
+        for key, value in pairs(map) do
+          instance[key] = value
+        end
+
+        instance.Parent = parent
+        return instance
+      end
+
+      local function f4(p3, p4)
+        f3("UICorner", { CornerRadius = UDim.new(0, p4) }, p3)
+      end
+
+      local function f5(name, text2, p5, p6, p7, p8, textSize, color2, p9, p10)
+        return f3("TextLabel", {
+          Name = name,
+          Text = text2,
+          Position = UDim2.fromOffset(p5, p6),
+          Size = UDim2.fromOffset(p7, p8),
+          BackgroundTransparency = 1,
+          TextSize = textSize,
+          TextColor3 = color2,
+          Font = p9 or Enum.Font.Gotham,
+          TextXAlignment = Enum.TextXAlignment.Left,
+          TextYAlignment = Enum.TextYAlignment.Center,
+        }, p10)
+      end
+
+      local currentCamera = workspace.CurrentCamera
+
+      local viewportSize = currentCamera and currentCamera.ViewportSize
+        or Vector2.new(1280, 720)
+
+      local clamped = math.clamp(viewportSize.X - 32, 240, 360)
+
+      v5 = f3("ScreenGui", {
+        Name = "VeyronixStartup",
+        ResetOnSpawn = false,
+        IgnoreGuiInset = true,
+        DisplayOrder = 1000001,
+        ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+      }, playerGui3)
+
+      local v10 = f3("CanvasGroup", {
+        Name = "Card",
+        GroupTransparency = 1,
+        AnchorPoint = Vector2.new(1, 1),
+        Position = UDim2.new(1, -18, 1, 158),
+        Size = UDim2.fromOffset(clamped, 144),
+        BackgroundColor3 = Color3.fromRGB(18, 18, 22),
+        BorderSizePixel = 0,
+      }, v5)
+
+      f4(v10, 12)
+
+      border = f3(
+        "UIStroke", { Color = Color3.fromRGB(0, 100, 50), Thickness = 1, Transparency = 0.15 },
+        v10
+      )
+
+      local v11 = f3("Frame", {
+        Position = UDim2.fromOffset(16, 15),
+        Size = UDim2.fromOffset(34, 34),
+        BackgroundColor3 = Color3.fromRGB(0, 230, 118),
+        BorderSizePixel = 0,
+      }, v10)
+
+      f4(v11, 9)
+
+      v11.AnchorPoint = Vector2.new(0.5, 0.5)
+      v11.Position = UDim2.fromOffset(33, 32)
+
+      v6 = f3("UIScale", { Scale = 0.85 }, v11)
+
+      f5(
+        "Logo", "K", 0, 0, 34, 34, 22, Color3.fromRGB(10, 10, 12),
+        Enum.Font.GothamBlack, v11
+      ).TextXAlignment = Enum.TextXAlignment.Center
+
+      f5(
+        "Brand", "VEYRONIX HUB", 62, 14, clamped - 105, 20, 14, Color3.fromRGB(240, 240, 245),
+        Enum.Font.GothamBold, v10
+      )
+
+      f5(
+        "Game", "Throw Food For Animals", 62, 35, clamped - 80, 16, 10,
+        Color3.fromRGB(150, 150, 160), nil, v10
+      )
+
+      local body = f5(
+        "Message", "", 17, 58, clamped - 34, 42, 12, Color3.fromRGB(220, 220, 228), nil, v10
+      )
+
+      body.TextWrapped = true
+
+      local gothamBold = Enum.Font.GothamBold
+
+      local step = f5(
+        "Step", "AUTHENTICATION", 17, 105, clamped - 105, 16, 9, color, gothamBold, v10
+      )
+
+      v7 = f5(
+        "Status", "LOADING", clamped - 88, 105, 70, 16, 9, color, Enum.Font.GothamBold, v10
+      )
+
+      v7.TextXAlignment = Enum.TextXAlignment.Right
+
+      local v12 = f3("Frame", {
+        Position = UDim2.fromOffset(17, 128),
+        Size = UDim2.new(1, -34, 0, 4),
+        BackgroundColor3 = Color3.fromRGB(40, 40, 46),
+        BorderSizePixel = 0,
+        ClipsDescendants = true,
+      }, v10)
+
+      f4(v12, 2)
+
+      local fill = f3("Frame", {
+        Name = "Progress",
+        Size = UDim2.fromScale(0, 1),
+        BackgroundColor3 = color,
+        BorderSizePixel = 0,
+      }, v12)
+
+      f4(fill, 2)
+
+      v8 = f3("Frame", {
+        Name = "Shimmer",
+        Size = UDim2.new(0.22, 0, 1, 0),
+        Position = UDim2.fromScale(-0.25, 0),
+        BackgroundColor3 = Color3.fromRGB(220, 255, 235),
+        BackgroundTransparency = 0.35,
+        BorderSizePixel = 0,
+      }, v12)
+
+      f4(v8, 2)
+
+      local v13 = f3("TextButton", {
+        Name = "Dismiss",
+        Text = "×",
+        Position = UDim2.new(1, -34, 0, 10),
+        Size = UDim2.fromOffset(24, 24),
+        BackgroundTransparency = 1,
+        TextSize = 18,
+        TextColor3 = Color3.fromRGB(150, 150, 160),
+        Font = Enum.Font.Gotham,
+      }, v10)
+
+      v2 = {
+        gui = v5,
+        frame = v10,
+        body = body,
+        step = step,
+        status = v7,
+        fill = fill,
+        border = border,
+        phase = v4,
+        shine = v8,
+      }
+
+      v9 = 0
+
+      connect2 = runService.Heartbeat:Connect(function(delta)
+        v9 = v9 + math.min(delta, 0.1)
+        local v14 = v2
+
+        if not v14 or v14.gui ~= v5 then
+          return
+        end
+
+        local v15 = v14.phase ~= "ready" and v14.phase ~= "error"
+        local v16 = (math.sin(v9 * 3.5) + 1) * 0.5
+        v6.Scale = v15 and 0.96 + v16 * 0.08 or 1
+        border.Transparency = v15 and 0.15 + v16 * 0.45 or 0.15
+        v8.Visible = v15
+
+        if v15 then
+          v8.Position = UDim2.fromScale(v9 % 1.5 / 1.5 * 1.5 - 0.25, 0)
+          v7.Text = "LOADING" .. string.rep(".", math.floor(v9 * 2.5) % 4)
+        end
+      end)
+
+      connect = v13.Activated:Connect(f1)
+
+      create2 = tweenService:Create(v10, TweenInfo.new(
+        0.55, Enum.EasingStyle.Back, Enum.EasingDirection.Out
+      ), {
+        Position = UDim2.new(1, -18, 1, -24),
+        GroupTransparency = 0,
+      })
+
+      create2:Play()
+    end
+
+    count = count + 1
+    local v17 = count
+
+    local v18 = {
+      access = { "INITIALIZING", 0.2 },
+      key = { "VERIFYING", 0.4 },
+      interface = { "LOADING INTERFACE", 0.75 },
+      ready = { "READY", 1 },
+      error = { "ERROR", 1 },
+    }
+
+    local access = v18[v4] or v18.access
+
+    v2.phase = v4
+    v2.body.Text = tostring(text):sub(1, 360)
+    v2.step.Text = access[1]
+    v2.status.Text = v4 == "error" and "ERROR" or v4 == "ready" and "READY" or "LOADING"
+    v2.step.TextColor3 = color
+    v2.status.TextColor3 = color
+    v2.fill.BackgroundColor3 = color
+    v2.border.Color = color
+
+    if create then
+      create:Cancel()
+    end
+
+    create = tweenService:Create(v2.fill, TweenInfo.new(
+      0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out
+    ), { Size = UDim2.fromScale(access[2], 1) })
+
+    create:Play()
+
+    if v4 == "ready" then
+      task.delay(2.5, function()
+        if v17 == count then
+          f1()
+        end
+      end)
+    end
+  end)
+
+  if not ok2 then
+    warn("[Veyronix] startup display unavailable: " .. tostring(result2))
+  end
+end
+
+f2("Loading Veyronix Hub...", "interface")
+
+-- WindUI version of the hub's built-in UI library.
+-- Same surface as the original (Window, Tab, Card, Toggle, Slider, Input, Dropdown,
+-- Button, Label, Divider, Keybind, Toast). If WindUI cannot load, the original UI runs.
+local function veyronixWindUI()
+	local WINDUI_URL = "https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"
+	local WindUI = loadstring(game:HttpGet(WINDUI_URL))()
+
+	if type(WindUI) ~= "table" then
+		error("WindUI did not return a table")
+	end
+
+	-- Veyronix green theme: dark surfaces with a clear emerald accent.
+	pcall(function()
+		WindUI:AddTheme({
+			Name = "VeyronixGreen",
+			Accent = Color3.fromRGB(0, 210, 110),
+			Background = Color3.fromRGB(12, 16, 14),
+			Outline = Color3.fromRGB(35, 65, 48),
+			Text = Color3.fromRGB(238, 245, 240),
+			Placeholder = Color3.fromRGB(135, 150, 140),
+			Button = Color3.fromRGB(0, 145, 75),
+			Icon = Color3.fromRGB(110, 235, 160),
+		})
+		WindUI:SetTheme("VeyronixGreen")
+	end)
+
+	local lib = {}
+
+	lib.C = {
+		bg = Color3.fromRGB(10, 10, 12),
+		bgPanel = Color3.fromRGB(18, 18, 22),
+		bgCard = Color3.fromRGB(24, 24, 28),
+		bgCardHi = Color3.fromRGB(30, 30, 36),
+		bgInput = Color3.fromRGB(34, 34, 40),
+		bgHover = Color3.fromRGB(44, 44, 52),
+		accent = Color3.fromRGB(0, 230, 118),
+		accentD = Color3.fromRGB(0, 180, 90),
+		accentDim = Color3.fromRGB(0, 100, 50),
+		accentGlow = Color3.fromRGB(140, 255, 180),
+		text = Color3.fromRGB(240, 240, 245),
+		textDim = Color3.fromRGB(150, 150, 160),
+		textLo = Color3.fromRGB(100, 100, 110),
+		border = Color3.fromRGB(40, 40, 48),
+		bad = Color3.fromRGB(240, 90, 90),
+		warn = Color3.fromRGB(255, 200, 90),
+	}
+
+	local ICONS = {
+		main = "star",
+		farm = "sprout",
+		upgrades = "arrow-up",
+		sell = "dollar-sign",
+		webhook = "mail",
+		recon = "radar",
+		set = "settings",
+		animals = "paw-print",
+		performance = "gauge",
+	}
+
+	-- Sidebar groups: which group each tab key sits in (groups appear in tab creation order).
+	local GROUP_OF = {
+		main = "Main",
+		animals = "Main",
+		farm = "Automation",
+		upgrades = "Automation",
+		sell = "Automation",
+		recon = "Tools",
+		webhook = "Tools",
+		set = "Settings",
+		performance = "Settings",
+	}
+
+	-- Card titles and icons (keys are the titles the hub passes in).
+	local CARD_STYLE = {
+		["THROW"] = { "Throw", "send" },
+		["TRAINING"] = { "Training", "dumbbell" },
+		["EQUIP ANIMALS"] = { "Equip animals", "paw-print" },
+		["CHARACTER"] = { "Character", "user" },
+		["REMOTE SPY"] = { "Remote spy", "radar" },
+		["RECENT CALLS  (click to select the Auto replay target)"] = { "Recent calls  (click to select the Auto replay target)", "history" },
+		["AUTO REPLAY  (uses the target selected in Recon)"] = { "Auto replay  (uses the target selected in Recon)", "repeat" },
+		["BUY"] = { "Buy", "shopping-cart" },
+		["SELLING"] = { "Selling", "circle-dollar-sign" },
+		["SETUP"] = { "Setup", "plug" },
+		["WEBHOOKS"] = { "Webhooks", "webhook" },
+		["VEYRONIX HUB"] = { "Veyronix Hub", "leaf" },
+		["KEYBINDS"] = { "Keybinds", "keyboard" },
+		["MISC"] = { "Misc", "toggle-right" },
+		["PERFORMANCE"] = { "Performance", "gauge" },
+		["CONFIG"] = { "Config", "save" },
+		["GAME DATA"] = { "Game data", "database" },
+	}
+
+	local function call(obj, names, ...)
+		if obj == nil then
+			return false
+		end
+
+		for _, name in ipairs(names) do
+			local fn = obj[name]
+
+			if type(fn) == "function" then
+				local ok = pcall(fn, obj, ...)
+
+				if ok then
+					return true
+				end
+			end
+		end
+
+		return false
+	end
+
+	local function make(host, kind, options)
+		local fn = host and host[kind]
+
+		if type(fn) ~= "function" then
+			warn("[Veyronix UI] WindUI has no " .. kind .. " element")
+
+			return nil
+		end
+
+		local ok, element = pcall(fn, host, options)
+
+		if not ok then
+			warn("[Veyronix UI] " .. kind .. " failed: " .. tostring(element))
+
+			return nil
+		end
+
+		return element
+	end
+
+	local function safe(callback, ...)
+		if type(callback) ~= "function" then
+			return
+		end
+
+		local ok, err = pcall(callback, ...)
+
+		if not ok then
+			warn("[Veyronix UI] callback error: " .. tostring(err))
+		end
+	end
+
+	-- The original controls are called as control.Set(value, silent) (value first).
+	-- A colon call is tolerated by shifting the arguments.
+	local function unwrap(control, value, silent)
+		if value == control then
+			return silent, nil
+		end
+
+		return value, silent
+	end
+
+	-- WindUI multi-select may hand back a list of names, a {name = true} map or option tables.
+	-- The hub filters expect a plain list of strings.
+	local function toNames(v)
+		local out = {}
+
+		if type(v) ~= "table" then
+			if v ~= nil then
+				out[1] = tostring(v)
+			end
+
+			return out
+		end
+
+		for k, x in pairs(v) do
+			if type(x) == "string" then
+				out[#out + 1] = x
+			elseif type(x) == "table" then
+				local name = x.Title or x.Name or x.Value or x[1]
+
+				if name ~= nil then
+					out[#out + 1] = tostring(name)
+				end
+			elseif x == true and type(k) == "string" then
+				out[#out + 1] = k
+			end
+		end
+
+		table.sort(out)
+
+		return out
+	end
+
+	function lib.Window(options)
+		options = options or {}
+
+		local window = WindUI:CreateWindow({
+			Title = "Veyronix Hub",
+			Author = "Throw Food For Animals",
+			Icon = "rbxassetid://129322863861971",
+            IconThemed = false,
+			IconSize = 22,
+			Folder = "VeyronixHub",
+			Size = UDim2.fromOffset(960, 640),
+			MinSize = Vector2.new(700, 480),
+			MaxSize = Vector2.new(1100, 760),
+			SideBarWidth = 205,
+			Resizable = true,
+			HideSearchBar = false,
+			Theme = "VeyronixGreen",
+		})
+
+		local win = { _tabs = {}, _destroyed = false, _visible = true }
+
+		-- The hub parents a small stats label to win.Gui, so keep a plain overlay for it.
+		local overlay = Instance.new("ScreenGui")
+
+		overlay.Name = "VeyronixOverlay"
+		overlay.ResetOnSpawn = false
+		overlay.IgnoreGuiInset = true
+		overlay.DisplayOrder = 50
+
+		local okParent = pcall(function()
+			overlay.Parent = coreGui
+		end)
+
+		if not okParent or not overlay.Parent then
+			overlay.Parent = players.LocalPlayer:WaitForChild("PlayerGui")
+		end
+
+		win.Gui = overlay
+
+		local toggleKey = options.toggleKey or Enum.KeyCode.RightShift
+
+		call(window, { "SetToggleKey" }, toggleKey)
+
+		function win:SetToggleKey(key)
+			if typeof(key) == "EnumItem" then
+				call(window, { "SetToggleKey" }, key)
+			end
+		end
+
+		function win:SetFooter() end
+
+		function win:Toast(title, message, duration)
+			pcall(function()
+				WindUI:Notify({
+					Title = tostring(title or ""),
+					Content = tostring(message or ""),
+					Duration = tonumber(duration) or 4,
+				})
+			end)
+		end
+
+		function win.SetVisible(_, visible)
+			win._visible = visible and true or false
+
+			if win._visible then
+				call(window, { "Open" })
+			else
+				call(window, { "Close" })
+			end
+		end
+
+		function win.IsVisible()
+			return win._visible
+		end
+
+		function win:Destroy()
+			if self._destroyed then
+				return
+			end
+
+			self._destroyed = true
+
+			if type(self.OnDestroy) == "function" then
+				pcall(self.OnDestroy)
+			end
+
+			pcall(function()
+				overlay:Destroy()
+			end)
+			call(window, { "Destroy" })
+		end
+
+		-- Closing the WindUI window also shuts the hub down, like the original close.
+		call(window, { "OnDestroy" }, function()
+			win:Destroy()
+		end)
+
+		function win:SelectTab(key)
+			local entry = self._tabs[key]
+
+			if entry and entry.element then
+				call(entry.element, { "Select" })
+			end
+		end
+
+		function win:Tab(key, name)
+			local parent = window
+			local groupName = GROUP_OF[key]
+
+			if groupName then
+				win._groups = win._groups or {}
+
+				if not win._groups[groupName] and type(window.Section) == "function" then
+					local okGroup, group = pcall(window.Section, window, { Title = groupName, Opened = true })
+
+					if okGroup and type(group) == "table" and type(group.Tab) == "function" then
+						win._groups[groupName] = group
+					end
+				end
+
+				parent = win._groups[groupName] or window
+			end
+
+			local tabOptions = { Title = tostring(name), Icon = ICONS[key] }
+			local ok, tab = pcall(parent.Tab, parent, tabOptions)
+
+			if not ok then
+				tabOptions.Icon = nil
+				ok, tab = pcall(parent.Tab, parent, tabOptions)
+			end
+
+			if not ok then
+				warn("[Veyronix UI] Tab failed: " .. tostring(tab))
+				tab = nil
+			end
+
+			self._tabs[key] = { element = tab }
+
+			local tabProxy = {}
+
+			function tabProxy:Card(title)
+				local host = tab
+
+				if tab then
+					local style = CARD_STYLE[title]
+					local shown = tostring(title or "")
+
+					if style then
+						shown = style[1]
+					elseif shown == string.upper(shown) then
+						shown = string.upper(string.sub(shown, 1, 1)) .. string.lower(string.sub(shown, 2))
+					end
+
+					local variants = {
+						{ Title = shown, Icon = style and style[2], Box = true, Opened = true },
+						{ Title = shown, Box = true, Opened = true },
+						{ Title = shown, Opened = true },
+					}
+
+					for _, options in ipairs(variants) do
+						local okSection, section = pcall(tab.Section, tab, options)
+
+						if okSection and type(section) == "table" and type(section.Toggle) == "function" then
+							host = section
+
+							break
+						end
+					end
+				end
+
+				host = host or {}
+
+				local card = {}
+
+				function card:Label(text)
+					local element = make(host, "Paragraph", { Title = tostring(text or "") })
+					local label = {}
+
+					function label.Set(selfOrText, textOrColor)
+						local newText = selfOrText
+
+						if selfOrText == label then
+							newText = textOrColor
+						end
+
+						if not call(element, { "SetTitle" }, tostring(newText or "")) then
+							call(element, { "SetDesc" }, tostring(newText or ""))
+						end
+					end
+
+					return label
+				end
+
+				function card:Toggle(label, description, default, callback)
+					local state = default == true
+					local live = false
+					local silent = false
+					local control = {}
+
+					local element = make(host, "Toggle", {
+						Title = tostring(label),
+						Desc = description and tostring(description) or nil,
+						Value = state,
+						Callback = function(value)
+							state = value == true
+
+							if live and not silent then
+								safe(callback, state)
+							end
+						end,
+					})
+
+					live = true
+
+					function control.Set(value, quiet)
+						value, quiet = unwrap(control, value, quiet)
+						state = value and true or false
+						silent = true
+						call(element, { "Set", "SetValue" }, state)
+						silent = false
+
+						if not quiet then
+							safe(callback, state)
+						end
+					end
+
+					function control.Get()
+						return state
+					end
+
+					return control
+				end
+
+				function card:Slider(label, min, max, default, format, callback)
+					local value = math.clamp(tonumber(default) or min, min, max)
+					local live = false
+					local silent = false
+					local control = {}
+					local fmt = format or "%d"
+					local decimals = tonumber(fmt:match("%%%.(%d+)f"))
+					local step = decimals and 1 / (10 ^ decimals) or 1
+
+					local element = make(host, "Slider", {
+						Title = tostring(label),
+						Step = step,
+						Value = { Min = min, Max = max, Default = value },
+						Callback = function(v)
+							value = tonumber(v) or value
+
+							if live and not silent then
+								safe(callback, value)
+							end
+						end,
+					})
+
+					live = true
+
+					function control.Set(newValue, quiet)
+						newValue, quiet = unwrap(control, newValue, quiet)
+						value = math.clamp(tonumber(newValue) or value, min, max)
+						silent = true
+						call(element, { "Set", "SetValue" }, value)
+						silent = false
+
+						if not quiet then
+							safe(callback, value)
+						end
+					end
+
+					function control.Get()
+						return value
+					end
+
+					return control
+				end
+
+				function card:Button(text, callback)
+					make(host, "Button", {
+						Title = tostring(text),
+						-- Keep action buttons visually distinct and easy to find.
+						Variant = "Primary",
+						Callback = function()
+							safe(callback)
+						end,
+					})
+				end
+
+				function card:Divider(text)
+					local title = string.upper(tostring(text or ""))
+					local made = false
+
+					if type(host.Section) == "function" then
+						made = make(host, "Section", { Title = title }) ~= nil
+					end
+
+					if not made then
+						make(host, "Paragraph", { Title = "— " .. title .. " —" })
+					end
+				end
+
+				function card:Input(label, placeholder, text, callback)
+					local value = tostring(text or "")
+					local live = false
+					local silent = false
+					local control = {}
+
+					local element = make(host, "Input", {
+						Title = tostring(label),
+						Placeholder = tostring(placeholder or ""),
+						Value = value,
+						Callback = function(v)
+							value = tostring(v or "")
+
+							if live and not silent then
+								safe(callback, value)
+							end
+						end,
+					})
+
+					live = true
+
+					function control.Set(newValue, quiet)
+						newValue, quiet = unwrap(control, newValue, quiet)
+						value = tostring(newValue or "")
+						silent = true
+						call(element, { "Set", "SetValue" }, value)
+						silent = false
+
+						if not quiet then
+							safe(callback, value)
+						end
+					end
+
+					function control.Get()
+						return value
+					end
+
+					return control
+				end
+
+				function card:MultiDropdown(label, options, default, callback)
+					local values = options or {}
+					local current = type(default) == "table" and table.clone(default) or {}
+					local live = false
+					local silent = false
+					local control = {}
+					local element = make(host, "Dropdown", {
+						Title = tostring(label),
+						Values = values,
+						Value = current,
+						Multi = true,
+						AllowNone = true,
+						Callback = function(v)
+							current = toNames(v)
+							if live and not silent then safe(callback, table.clone(current)) end
+						end,
+					})
+					live = true
+					function control.Set(newValue, quiet)
+						newValue, quiet = unwrap(control, newValue, quiet)
+						current = toNames(newValue)
+						silent = true
+						call(element, { "Select", "Set", "SetValue" }, current)
+						silent = false
+						if not quiet then safe(callback, table.clone(current)) end
+					end
+					function control.Get() return table.clone(current) end
+					function control.SetOptions(newOptions, quiet)
+						values = newOptions or {}
+						silent = true
+						call(element, { "Refresh", "SetValues" }, values)
+						silent = false
+						if not quiet then safe(callback, table.clone(current)) end
+					end
+					return control
+				end
+
+				function card:Dropdown(label, options, default, callback)
+					local values = options or {}
+					local current = default
+					local live = false
+					local silent = false
+					local control = {}
+
+					local function has(list, item)
+						for _, v in ipairs(list) do
+							if v == item then
+								return true
+							end
+						end
+
+						return false
+					end
+
+					local element = make(host, "Dropdown", {
+						Title = tostring(label),
+						Values = values,
+						Value = current,
+						Callback = function(v)
+							if type(v) == "table" then
+								v = v.Title or v[1]
+							end
+
+							current = v
+
+							if live and not silent then
+								safe(callback, v)
+							end
+						end,
+					})
+
+					live = true
+
+					function control.Set(newValue, quiet)
+						newValue, quiet = unwrap(control, newValue, quiet)
+						current = newValue
+						silent = true
+						call(element, { "Select", "Set", "SetValue" }, newValue)
+						silent = false
+
+						if not quiet then
+							safe(callback, newValue)
+						end
+					end
+
+					function control.Get()
+						return current
+					end
+
+					function control.SetOptions(newOptions, quiet)
+						newOptions = newOptions or {}
+
+						if newOptions == control then
+							return
+						end
+
+						values = newOptions
+						silent = true
+						call(element, { "Refresh", "SetValues" }, values)
+
+						if not has(values, current) and values[1] ~= nil then
+							current = values[1]
+							call(element, { "Select", "Set", "SetValue" }, current)
+						elseif current ~= nil then
+							call(element, { "Select", "Set", "SetValue" }, current)
+						end
+
+						silent = false
+
+						if not quiet then
+							safe(callback, current)
+						end
+					end
+
+					return control
+				end
+
+				-- Keybinds are a text field holding a KeyCode name (RightShift, F, None).
+				function card:Keybind(label, default, callback)
+					local current = typeof(default) == "EnumItem" and default or Enum.KeyCode.RightShift
+					local live = false
+					local control = {}
+					local element
+
+					local function find(text)
+						text = tostring(text or ""):gsub("^%s+", ""):gsub("%s+$", "")
+
+						for _, keyCode in ipairs(Enum.KeyCode:GetEnumItems()) do
+							if keyCode.Name:lower() == text:lower() then
+								return keyCode
+							end
+						end
+
+						return nil
+					end
+
+					element = make(host, "Input", {
+						Title = tostring(label),
+						Placeholder = "Key name (RightShift, F, LeftAlt)",
+						Value = current.Name,
+						Callback = function(v)
+							if not live then
+								return
+							end
+
+							local key = find(v)
+
+							if not key then
+								call(element, { "Set", "SetValue" }, current.Name)
+								win:Toast("Keybind", "Unknown key name: " .. tostring(v), 3)
+
+								return
+							end
+
+							current = key
+							call(element, { "Set", "SetValue" }, current.Name)
+							safe(callback, current)
+						end,
+					})
+
+					live = true
+
+					function control.Get()
+						return current
+					end
+
+					function control.Set(newValue, quiet)
+						newValue, quiet = unwrap(control, newValue, quiet)
+
+						local key = typeof(newValue) == "EnumItem" and newValue or find(newValue)
+
+						if not key then
+							return
+						end
+
+						current = key
+						live = false
+						call(element, { "Set", "SetValue" }, current.Name)
+						live = true
+
+						if not quiet then
+							safe(callback, current)
+						end
+					end
+
+					return control
+				end
+
+				return card
+			end
+
+			return tabProxy
+		end
+
+		return win
+	end
+
+	function lib:Toast() end
+
+	return lib
+end
+
+local function veyronixOriginalUI()
+  local v42 = {}
+
+  v42.C = {
+    bg = Color3.fromRGB(10, 10, 12),
+    bgPanel = Color3.fromRGB(18, 18, 22),
+    bgCard = Color3.fromRGB(24, 24, 28),
+    bgCardHi = Color3.fromRGB(30, 30, 36),
+    bgInput = Color3.fromRGB(34, 34, 40),
+    bgHover = Color3.fromRGB(44, 44, 52),
+    accent = Color3.fromRGB(0, 230, 118),
+    accentD = Color3.fromRGB(0, 180, 90),
+    accentDim = Color3.fromRGB(0, 100, 50),
+    accentGlow = Color3.fromRGB(140, 255, 180),
+    text = Color3.fromRGB(240, 240, 245),
+    textDim = Color3.fromRGB(150, 150, 160),
+    textLo = Color3.fromRGB(100, 100, 110),
+    border = Color3.fromRGB(40, 40, 48),
+    bad = Color3.fromRGB(240, 90, 90),
+    warn = Color3.fromRGB(255, 200, 90),
+  }
+
+  local c = v42.C
+  local tweenInfo = TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+  local tweenInfo2 = TweenInfo.new(0.28, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+  local tweenInfo3 = TweenInfo.new(0.18, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+
+  local function getCreate(p20, tweenInfo4, p21)
+    local create6 = tweenService:Create(p20, tweenInfo4, p21)
+    create6:Play()
+    return create6
+  end
+
+  local function makeCorner(parent2, p22)
+    local uiCorner = Instance.new("UICorner")
+    uiCorner.CornerRadius = UDim.new(0, p22)
+    uiCorner.Parent = parent2
+
+    return uiCorner
+  end
+
+  local function makeStroke(parent3, color4, thickness, transparency)
+    local uiStroke = Instance.new("UIStroke")
+    uiStroke.Color = color4
+    uiStroke.Thickness = thickness or 1
+    uiStroke.Transparency = transparency or 0.5
+    uiStroke.Parent = parent3
+
+    return uiStroke
+  end
+
+  local function makePadding(parent4, p23, p24, p25, p26)
+    local uiPadding = Instance.new("UIPadding")
+    uiPadding.PaddingTop = UDim.new(0, p23)
+    uiPadding.PaddingBottom = UDim.new(0, p24)
+    uiPadding.PaddingLeft = UDim.new(0, p25)
+    uiPadding.PaddingRight = UDim.new(0, p26)
+    uiPadding.Parent = parent4
+
+    return uiPadding
+  end
+
+  local function makeTextLabel(parent5, text7, font, textSize2, textColor3, textXAlignment)
+    local textLabel = Instance.new("TextLabel")
+    textLabel.BackgroundTransparency = 1
+    textLabel.Font = font
+    textLabel.TextSize = textSize2
+    textLabel.TextColor3 = textColor3
+    textLabel.TextXAlignment = textXAlignment or Enum.TextXAlignment.Left
+    textLabel.Text = text7
+    textLabel.Parent = parent5
+
+    return textLabel
+  end
+
+  local touchEnabled = userInputService.TouchEnabled and not userInputService.KeyboardEnabled
+
+  local function makeFolder()
+    local ok10, result8 = pcall(function() return coreGui end)
+
+    if ok10 and result8 then
+      if pcall(function()
+        local folder = Instance.new("Folder")
+        folder.Parent = result8
+        folder:Destroy()
+      end) then
+        return result8
+      end
+    end
+
+    return players.LocalPlayer:WaitForChild("PlayerGui")
+  end
+
+  local function getHighest()
+    local currentCamera3 = workspaceService.CurrentCamera
+
+    local viewportSize3 = currentCamera3 and currentCamera3.ViewportSize
+      or Vector2.new(1280, 720)
+
+    local ok11, result9 = pcall(function() return guiService:GetGuiInset() end)
+    local y = ok11 and result9 and result9.Y or 0
+
+    return math.max(
+      0.45, math.min(1, (viewportSize3.X - 16) / 840, (viewportSize3.Y - y - 16) / 520)
+    ), y
+  end
+
+  local v43 = setmetatable({}, { __mode = "k" })
+
+  function v42:Toast(p27, p28, p29)
+    local list = v43[self]
+
+    if not list then
+      list = {}
+      v43[self] = list
+    end
+
+    local h = p28 and 52 or 36
+    local v44 = 16
+
+    for _, value2 in ipairs(list) do
+      v44 = v44 + value2.h + 6
+    end
+
+    local v45 = { h = h }
+    list[#list + 1] = v45
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 260, 0, h)
+    frame.AnchorPoint = Vector2.new(1, 1)
+    frame.Position = UDim2.new(1, 280, 1, -v44)
+    frame.BackgroundColor3 = c.bgCard
+    frame.BorderSizePixel = 0
+    frame.ZIndex = 50
+    frame.Parent = self
+
+    makeCorner(frame, 8)
+    makeStroke(frame, c.accentDim, 1, 0.2)
+
+    local textLabel2 = makeTextLabel(frame, p27, Enum.Font.GothamBold, 13, c.accent)
+    textLabel2.Size = UDim2.new(1, -16, 0, 20)
+    textLabel2.Position = UDim2.new(0, 10, 0, p28 and 6 or 8)
+    textLabel2.ZIndex = 51
+
+    if p28 then
+      local textLabel3 = makeTextLabel(frame, p28, Enum.Font.Gotham, 11, c.textDim)
+      textLabel3.Size = UDim2.new(1, -16, 0, 16)
+      textLabel3.Position = UDim2.new(0, 10, 0, 28)
+      textLabel3.ZIndex = 51
+    end
+
+    getCreate(frame, tweenInfo2, { Position = UDim2.new(1, -16, 1, -v44) })
+
+    task.delay(p29 or 3, function()
+      getCreate(frame, tweenInfo2, { Position = UDim2.new(1, 280, 1, -v44) })
+      task.wait(0.35)
+
+      for index, value3 in ipairs(list) do
+        if value3 == v45 then
+          table.remove(list, index)
+          break
+        end
+      end
+
+      frame:Destroy()
+    end)
+  end
+
+  function v42.Window(p30)
+    local v46 = p30
+    v46 = v46 or {}
+
+    local guiName = v46.guiName or "VeyronixHub"
+    local parent6 = makeFolder()
+    local findFirstChild = parent6:FindFirstChild(guiName)
+
+    if findFirstChild then
+      findFirstChild:Destroy()
+    end
+
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = guiName
+    screenGui.ResetOnSpawn = false
+    screenGui.IgnoreGuiInset = true
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    screenGui.DisplayOrder = 999
+    screenGui.Parent = parent6
+
+    local scale, y2 = getHighest()
+
+    local window = Instance.new("Frame")
+    window.Name = "Window"
+    window.Size = UDim2.new(0, 840, 0, 520)
+    window.AnchorPoint = Vector2.new(0.5, 0.5)
+    window.Position = UDim2.new(0.5, 0, 0.5, y2 / 2)
+    window.BackgroundColor3 = c.bg
+    window.BorderSizePixel = 0
+    window.ClipsDescendants = true
+    window.Parent = screenGui
+
+    makeCorner(window, 12)
+    makeStroke(window, c.border, 1, 0.2)
+
+    local uiScale = Instance.new("UIScale")
+    uiScale.Scale = scale
+    uiScale.Parent = window
+
+    local frame2 = Instance.new("Frame")
+    frame2.Size = UDim2.new(1, 0, 0, 52)
+    frame2.BackgroundColor3 = c.bgPanel
+    frame2.BorderSizePixel = 0
+    frame2.Parent = window
+
+    local textLabel4 = makeTextLabel(frame2, "VEYRONIX", Enum.Font.GothamBlack, 18, c.accent)
+    textLabel4.Size = UDim2.new(0, 120, 1, 0)
+    textLabel4.Position = UDim2.new(0, 20, 0, 0)
+
+    local textLabel5 = makeTextLabel(frame2, v46.subtitle or "", Enum.Font.Code, 11, c.textDim)
+    textLabel5.Size = UDim2.new(1, -260, 1, 0)
+    textLabel5.Position = UDim2.new(0, 130, 0, 0)
+
+    local textButton = Instance.new("TextButton")
+    textButton.Size = UDim2.new(0, 34, 0, 28)
+    textButton.Position = UDim2.new(1, -44, 0, 12)
+    textButton.BackgroundColor3 = c.bgInput
+    textButton.AutoButtonColor = false
+    textButton.Text = "✕"
+    textButton.Font = Enum.Font.GothamBold
+    textButton.TextSize = 13
+    textButton.TextColor3 = c.textDim
+    textButton.BorderSizePixel = 0
+    textButton.Parent = frame2
+
+    makeCorner(textButton, 6)
+
+    local clone = textButton:Clone()
+    clone.Text = "—"
+    clone.Position = UDim2.new(1, -84, 0, 12)
+    clone.Parent = frame2
+
+    local frame3 = Instance.new("Frame")
+    frame3.Size = UDim2.new(0, 190, 1, -86)
+    frame3.Position = UDim2.new(0, 0, 0, 52)
+    frame3.BackgroundColor3 = c.bgPanel
+    frame3.BorderSizePixel = 0
+    frame3.Parent = window
+
+    local frame4 = Instance.new("Frame")
+    frame4.Size = UDim2.new(0, 1, 1, 0)
+    frame4.Position = UDim2.new(1, -1, 0, 0)
+    frame4.BackgroundColor3 = c.border
+    frame4.BorderSizePixel = 0
+    frame4.Parent = frame3
+
+    local textLabel6 = makeTextLabel(
+      frame3, v46.sidebarTitle or "FEATURES", Enum.Font.GothamBold, 10, c.textLo
+    )
+
+    textLabel6.Size = UDim2.new(1, -20, 0, 24)
+    textLabel6.Position = UDim2.new(0, 16, 0, 14)
+
+    local frame5 = Instance.new("Frame")
+    frame5.Size = UDim2.new(1, 0, 1, -150)
+    frame5.Position = UDim2.new(0, 0, 0, 42)
+    frame5.BackgroundTransparency = 1
+    frame5.Parent = frame3
+
+    makePadding(frame5, 0, 8, 8, 0)
+    local localPlayer2 = players.LocalPlayer
+
+    local userCard = Instance.new("Frame")
+    userCard.Name = "UserCard"
+    userCard.Size = UDim2.new(1, -16, 0, 60)
+    userCard.Position = UDim2.new(0, 8, 1, -76)
+    userCard.BackgroundColor3 = c.bgCard
+    userCard.BorderSizePixel = 0
+    userCard.Parent = frame3
+
+    makeCorner(userCard, 8)
+    makeStroke(userCard, c.border, 1, 0.5)
+
+    local imageLabel = Instance.new("ImageLabel")
+    imageLabel.Size = UDim2.new(0, 36, 0, 36)
+    imageLabel.Position = UDim2.new(0, 12, 0, 12)
+    imageLabel.BackgroundColor3 = c.bgInput
+    imageLabel.BorderSizePixel = 0
+    imageLabel.Image = ""
+    imageLabel.Parent = userCard
+
+    makeCorner(imageLabel, 18)
+    makeStroke(imageLabel, c.accent, 1.5, 0.3)
+
+    task.spawn(function()
+      local ok12, image = pcall(function()
+        return players:GetUserThumbnailAsync(
+          localPlayer2.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150
+        )
+      end)
+
+      if ok12 and image and imageLabel.Parent then
+        imageLabel.Image = image
+      end
+    end)
+
+    local textLabel7 = makeTextLabel(
+      userCard, localPlayer2.Name, Enum.Font.GothamBold, 12, c.text
+    )
+
+    textLabel7.Size = UDim2.new(1, -60, 0, 16)
+    textLabel7.Position = UDim2.new(0, 54, 0, 12)
+
+    local textLabel8 = makeTextLabel(userCard, "● online", Enum.Font.Code, 10, c.accent)
+    textLabel8.Size = UDim2.new(1, -60, 0, 14)
+    textLabel8.Position = UDim2.new(0, 54, 0, 30)
+
+    if type(v46.keyInfo) == "function" then
+      task.spawn(function()
+        while userCard.Parent do
+          local ok13, text8, textColor32 = pcall(v46.keyInfo)
+
+          if ok13 and text8 then
+            textLabel8.Text = text8
+            textLabel8.TextColor3 = textColor32 or c.accent
+          end
+
+          task.wait(1)
+        end
+      end)
+    end
+
+    local uiListLayout = Instance.new("UIListLayout")
+    uiListLayout.Padding = UDim.new(0, 4)
+    uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    uiListLayout.Parent = frame5
+
+    local frame6 = Instance.new("Frame")
+    frame6.Size = UDim2.new(1, -190, 1, -86)
+    frame6.Position = UDim2.new(0, 190, 0, 52)
+    frame6.BackgroundColor3 = c.bg
+    frame6.BorderSizePixel = 0
+    frame6.ClipsDescendants = true
+    frame6.Parent = window
+
+    local frame7 = Instance.new("Frame")
+    frame7.Size = UDim2.new(1, 0, 0, 34)
+    frame7.Position = UDim2.new(0, 0, 1, -34)
+    frame7.BackgroundColor3 = c.bgPanel
+    frame7.BorderSizePixel = 0
+    frame7.Parent = window
+
+    local textLabel9 = makeTextLabel(frame7, v46.footer or "", Enum.Font.Code, 11, c.textLo)
+    textLabel9.Size = UDim2.new(1, -24, 1, 0)
+    textLabel9.Position = UDim2.new(0, 14, 0, 0)
+
+    local v47 = {
+      Gui = screenGui,
+      Frame = window,
+      _tabs = {},
+      _current = nil,
+      _conns = {},
+      _toggleKey = v46.toggleKey or Enum.KeyCode.RightShift,
+    }
+
+    local v48, v49, v50
+
+    frame2.InputBegan:Connect(function(input)
+      if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+        local position = input.Position
+        local position2 = window.Position
+        v48 = true
+        v49 = position
+        v50 = position2
+      end
+    end)
+
+    table.insert(v47._conns, userInputService.InputChanged:Connect(function(input2)
+      if v48
+        and (input2.UserInputType == Enum.UserInputType.MouseMovement
+          or input2.UserInputType == Enum.UserInputType.Touch) then
+        local v51 = input2.Position - v49
+
+        window.Position = UDim2.new(
+          v50.X.Scale, v50.X.Offset + v51.X, v50.Y.Scale, v50.Y.Offset + v51.Y
+        )
+      end
+    end))
+
+    table.insert(v47._conns, userInputService.InputEnded:Connect(function(input3)
+      if input3.UserInputType == Enum.UserInputType.MouseButton1
+        or input3.UserInputType == Enum.UserInputType.Touch then
+        v48 = false
+      end
+    end))
+
+    function v47.SetFooter(_, text9)
+      textLabel9.Text = text9
+    end
+
+    function v47:Toast(p31, p32, p33)
+      v42.Toast(screenGui, p31, p32, p33)
+    end
+
+    function v47:SetToggleKey(toggleKey)
+      if typeof(toggleKey) == "EnumItem" then
+        self._toggleKey = toggleKey
+      end
+    end
+
+    function v47:Destroy()
+      if self._destroyed then
+        return
+      end
+
+      self._destroyed = true
+
+      for _, value4 in ipairs(self._conns) do
+        pcall(function() value4:Disconnect() end)
+      end
+
+      if self.OnDestroy then
+        pcall(self.OnDestroy)
+      end
+
+      screenGui:Destroy()
+    end
+
+    local kicon = Instance.new("TextButton")
+    kicon.Name = "KIcon"
+    kicon.AnchorPoint = Vector2.new(0.5, 0.5)
+    kicon.Size = UDim2.new(0, 56, 0, 56)
+    kicon.Position = touchEnabled and UDim2.new(0, 46, 0.5, 0) or UDim2.new(1, -60, 1, -60)
+    kicon.BackgroundColor3 = c.bg
+    kicon.BorderSizePixel = 0
+    kicon.AutoButtonColor = false
+    kicon.Text = ""
+    kicon.Visible = false
+    kicon.Active = true
+    kicon.ZIndex = 60
+    kicon.Parent = screenGui
+
+    makeCorner(kicon, 14)
+
+    local uiStroke2 = Instance.new("UIStroke")
+    uiStroke2.Color = c.accent
+    uiStroke2.Thickness = 1.5
+    uiStroke2.Transparency = 0.3
+    uiStroke2.Parent = kicon
+
+    local frame8 = Instance.new("Frame")
+    frame8.Size = UDim2.new(1, 0, 1, 0)
+    frame8.BackgroundTransparency = 1
+    frame8.BorderSizePixel = 0
+    frame8.ZIndex = 60
+    frame8.Parent = kicon
+
+    makeCorner(frame8, 14)
+
+    local uiStroke3 = Instance.new("UIStroke")
+    uiStroke3.Color = c.accent
+    uiStroke3.Thickness = 2
+    uiStroke3.Transparency = 1
+    uiStroke3.Parent = frame8
+
+    local textLabel10 = Instance.new("TextLabel")
+    textLabel10.Size = UDim2.new(1, 0, 1, 0)
+    textLabel10.BackgroundTransparency = 1
+    textLabel10.Font = Enum.Font.GothamBlack
+    textLabel10.TextSize = 32
+    textLabel10.TextColor3 = c.accent
+    textLabel10.Text = "K"
+    textLabel10.ZIndex = 61
+    textLabel10.Parent = kicon
+
+    kicon.MouseEnter:Connect(function()
+      getCreate(kicon, tweenInfo3, { Size = UDim2.new(0, 62, 0, 62) })
+      getCreate(uiStroke2, tweenInfo, { Color = c.accentGlow, Transparency = 0.1 })
+      getCreate(textLabel10, tweenInfo, { TextColor3 = c.accentGlow })
+    end)
+
+    kicon.MouseLeave:Connect(function()
+      getCreate(kicon, tweenInfo3, { Size = UDim2.new(0, 56, 0, 56) })
+      getCreate(uiStroke2, tweenInfo, { Color = c.accent, Transparency = 0.3 })
+      getCreate(textLabel10, tweenInfo, { TextColor3 = c.accent })
+    end)
+
+    task.spawn(function()
+      while kicon.Parent do
+        if kicon.Visible then
+          uiStroke3.Transparency = 0.3
+          uiStroke3.Thickness = 2
+
+          getCreate(
+            uiStroke3, TweenInfo.new(1.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+            { Transparency = 1, Thickness = 8 }
+          )
+        end
+
+        task.wait(1.6)
+      end
+    end)
+
+    local v52 = true
+    local count2 = 0
+
+    local function getUdim()
+      local v53 = kicon.AbsolutePosition + kicon.AbsoluteSize * 0.5
+      return UDim2.new(0, v53.X, 0, v53.Y)
+    end
+
+    local position3
+
+    local function f7(p34)
+      if v47._destroyed or p34 == v52 then
+        return
+      end
+
+      v52 = p34
+      count2 = count2 + 1
+      local v54 = count2
+
+      if p34 then
+        local udim = position3 or UDim2.new(0.5, 0, 0.5, y2 / 2)
+        window.Position = getUdim()
+        uiScale.Scale = scale * 0.3
+        window.Visible = true
+
+        getCreate(window, tweenInfo2, { Position = udim })
+        getCreate(uiScale, tweenInfo2, { Scale = scale })
+        getCreate(kicon, tweenInfo, { BackgroundTransparency = 1 })
+        getCreate(textLabel10, tweenInfo, { TextTransparency = 1 })
+        getCreate(uiStroke2, tweenInfo, { Transparency = 1 })
+
+        task.delay(0.14, function()
+          if count2 == v54 then
+            kicon.Visible = false
+          end
+        end)
+      else
+        position3 = window.Position
+
+        kicon.Visible = true
+        kicon.BackgroundTransparency = 1
+
+        textLabel10.TextTransparency = 1
+        uiStroke2.Transparency = 1
+
+        getCreate(kicon, tweenInfo2, { BackgroundTransparency = 0 })
+        getCreate(textLabel10, tweenInfo2, { TextTransparency = 0 })
+        getCreate(uiStroke2, tweenInfo2, { Transparency = 0.3 })
+        getCreate(window, tweenInfo2, { Position = getUdim() })
+        getCreate(uiScale, tweenInfo2, { Scale = scale * 0.3 })
+
+        task.delay(0.3, function()
+          if count2 ~= v54 then
+            return
+          end
+
+          window.Visible = false
+          uiScale.Scale = scale
+          window.Position = position3
+        end)
+      end
+    end
+
+    function v47.SetVisible(_, p35)
+      f7(p35 and true or false)
+    end
+
+    function v47.IsVisible(p36)
+      return v52
+    end
+
+    local v55 = {
+      active = false,
+      dragged = false,
+      start = nil,
+      origin = nil,
+    }
+
+    kicon.InputBegan:Connect(function(input4)
+      if input4.UserInputType ~= Enum.UserInputType.MouseButton1
+        and input4.UserInputType ~= Enum.UserInputType.Touch then
+        return
+      end
+
+      local position4 = input4.Position
+      local position5 = kicon.Position
+
+      v55.active = true
+      v55.dragged = false
+      v55.start = position4
+      v55.origin = position5
+    end)
+
+    table.insert(v47._conns, userInputService.InputChanged:Connect(function(input5)
+      if not v55.active then
+        return
+      end
+
+      if input5.UserInputType ~= Enum.UserInputType.MouseMovement
+        and input5.UserInputType ~= Enum.UserInputType.Touch then
+        return
+      end
+
+      local v56 = input5.Position - v55.start
+
+      if not v55.dragged and v56.Magnitude > 6 then
+        v55.dragged = true
+      end
+
+      if v55.dragged then
+        local origin = v55.origin
+
+        kicon.Position = UDim2.new(
+          origin.X.Scale, origin.X.Offset + v56.X, origin.Y.Scale, origin.Y.Offset + v56.Y
+        )
+      end
+    end))
+
+    table.insert(v47._conns, userInputService.InputEnded:Connect(function(input6)
+      if not v55.active then
+        return
+      end
+
+      if input6.UserInputType ~= Enum.UserInputType.MouseButton1
+        and input6.UserInputType ~= Enum.UserInputType.Touch then
+        return
+      end
+
+      local dragged = v55.dragged
+
+      v55.active = false
+      v55.dragged = false
+
+      if not dragged and kicon.Visible then
+        f7(true)
+      end
+    end))
+
+    textButton.MouseButton1Click:Connect(function() f7(false) end)
+    clone.MouseButton1Click:Connect(function() f7(false) end)
+
+    table.insert(v47._conns, userInputService.InputBegan:Connect(function(input7, p37)
+      if not p37 and input7.KeyCode == v47._toggleKey then
+        f7(not v52)
+      end
+    end))
+
+    function v47:SelectTab(p38)
+      if self._current == p38 then
+        return
+      end
+
+      local current = self._current
+      self._current = p38
+
+      for key2, value5 in pairs(self._tabs) do
+        if key2 == p38 then
+          getCreate(value5.btn, tweenInfo, {
+            BackgroundTransparency = 0,
+            BackgroundColor3 = c.bgCard,
+          })
+
+          getCreate(value5.lbl, tweenInfo, { TextColor3 = c.accent })
+          getCreate(value5.icon, tweenInfo, { TextColor3 = c.accent })
+
+          value5.indicator.Visible = true
+          value5.panel.Visible = true
+          value5.panel.Position = UDim2.new(0, 12, 0, 0)
+          value5.panel.GroupTransparency = 1
+
+          getCreate(value5.panel, tweenInfo2, {
+            Position = UDim2.new(0, 0, 0, 0),
+            GroupTransparency = 0,
+          })
+        else
+          getCreate(value5.btn, tweenInfo, { BackgroundTransparency = 1 })
+          getCreate(value5.lbl, tweenInfo, { TextColor3 = c.textDim })
+          getCreate(value5.icon, tweenInfo, { TextColor3 = c.textDim })
+
+          value5.indicator.Visible = false
+
+          if key2 == current then
+            getCreate(value5.panel, tweenInfo, { GroupTransparency = 1 })
+
+            task.delay(0.14, function()
+              if self._current ~= key2 then
+                value5.panel.Visible = false
+              end
+            end)
+          else
+            value5.panel.Visible = false
+          end
+        end
+      end
+    end
+
+    function v47:Tab(key3, p39, p40)
+      local textButton2 = Instance.new("TextButton")
+      textButton2.Size = UDim2.new(1, -16, 0, touchEnabled and 44 or 38)
+      textButton2.BackgroundColor3 = c.bgCard
+      textButton2.BackgroundTransparency = 1
+      textButton2.AutoButtonColor = false
+      textButton2.Text = ""
+      textButton2.BorderSizePixel = 0
+      textButton2.Parent = frame5
+
+      makeCorner(textButton2, 7)
+
+      local frame9 = Instance.new("Frame")
+      frame9.Size = UDim2.new(0, 3, 0.6, 0)
+      frame9.Position = UDim2.new(0, 0, 0.2, 0)
+      frame9.BackgroundColor3 = c.accent
+      frame9.BorderSizePixel = 0
+      frame9.Visible = false
+      frame9.Parent = textButton2
+
+      makeCorner(frame9, 2)
+
+      local textLabel11 = makeTextLabel(
+        textButton2, p40 or "●", Enum.Font.Code, 14, c.textDim, Enum.TextXAlignment.Center
+      )
+
+      textLabel11.Size = UDim2.new(0, 18, 1, 0)
+      textLabel11.Position = UDim2.new(0, 12, 0, 0)
+
+      local textLabel12 = makeTextLabel(textButton2, p39, Enum.Font.Gotham, 13, c.textDim)
+      textLabel12.Size = UDim2.new(1, -50, 1, 0)
+      textLabel12.Position = UDim2.new(0, 38, 0, 0)
+
+      local canvasGroup = Instance.new("CanvasGroup")
+      canvasGroup.Size = UDim2.new(1, 0, 1, 0)
+      canvasGroup.BackgroundTransparency = 1
+      canvasGroup.Visible = false
+      canvasGroup.Parent = frame6
+
+      local scrollingFrame = Instance.new("ScrollingFrame")
+      scrollingFrame.Size = UDim2.new(1, 0, 1, 0)
+      scrollingFrame.BackgroundTransparency = 1
+      scrollingFrame.BorderSizePixel = 0
+      scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+      scrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+      scrollingFrame.ScrollBarThickness = 4
+      scrollingFrame.ScrollBarImageColor3 = c.accentDim
+      scrollingFrame.Parent = canvasGroup
+
+      makePadding(scrollingFrame, 22, 22, 26, 26)
+
+      local uiListLayout2 = Instance.new("UIListLayout")
+      uiListLayout2.Padding = UDim.new(0, 14)
+      uiListLayout2.SortOrder = Enum.SortOrder.LayoutOrder
+      uiListLayout2.Parent = scrollingFrame
+
+      local v57 = { _scroll = scrollingFrame, _order = 0 }
+
+      v47._tabs[key3] = {
+        btn = textButton2,
+        lbl = textLabel12,
+        icon = textLabel11,
+        indicator = frame9,
+        panel = canvasGroup,
+      }
+
+      textButton2.MouseButton1Click:Connect(function() v47:SelectTab(key3) end)
+
+      textButton2.MouseEnter:Connect(function()
+        if v47._current ~= key3 then
+          getCreate(textButton2, tweenInfo, {
+            BackgroundTransparency = 0.85,
+            BackgroundColor3 = c.bgHover,
+          })
+        end
+      end)
+
+      textButton2.MouseLeave:Connect(function()
+        if v47._current ~= key3 then
+          getCreate(textButton2, tweenInfo, { BackgroundTransparency = 1 })
+        end
+      end)
+
+      function v57:Card(p41)
+        self._order = self._order + 1
+
+        local frame10 = Instance.new("Frame")
+        frame10.Size = UDim2.new(1, 0, 0, 0)
+        frame10.AutomaticSize = Enum.AutomaticSize.Y
+        frame10.BackgroundColor3 = c.bgCard
+        frame10.BorderSizePixel = 0
+        frame10.LayoutOrder = self._order
+        frame10.Parent = scrollingFrame
+
+        makeCorner(frame10, 10)
+        local stroke = makeStroke(frame10, c.border, 1, 0.5)
+        makePadding(frame10, 16, 16, 18, 18)
+
+        local uiListLayout3 = Instance.new("UIListLayout")
+        uiListLayout3.Padding = UDim.new(0, 10)
+        uiListLayout3.SortOrder = Enum.SortOrder.LayoutOrder
+        uiListLayout3.Parent = frame10
+
+        local frame11 = Instance.new("Frame")
+        frame11.Size = UDim2.new(1, 0, 0, 20)
+        frame11.BackgroundTransparency = 1
+        frame11.LayoutOrder = 0
+        frame11.Parent = frame10
+
+        local frame12 = Instance.new("Frame")
+        frame12.Size = UDim2.new(0, 4, 0, 14)
+        frame12.Position = UDim2.new(0, 0, 0, 3)
+        frame12.BackgroundColor3 = c.accent
+        frame12.BorderSizePixel = 0
+        frame12.Parent = frame11
+
+        makeCorner(frame12, 2)
+
+        local textLabel13 = makeTextLabel(frame11, p41, Enum.Font.GothamBold, 11, c.textLo)
+        textLabel13.Size = UDim2.new(1, -16, 1, 0)
+        textLabel13.Position = UDim2.new(0, 12, 0, 0)
+
+        frame10.MouseEnter:Connect(function()
+          getCreate(stroke, tweenInfo, { Color = c.accentDim, Transparency = 0.3 })
+        end)
+
+        frame10.MouseLeave:Connect(function()
+          getCreate(stroke, tweenInfo, { Color = c.border, Transparency = 0.5 })
+        end)
+
+        local v58 = { _n = 0 }
+
+        local function f8()
+          v58._n = v58._n + 1
+          return v58._n
+        end
+
+        function v58:Label(p42, p43)
+          local textLabel14 = makeTextLabel(
+            frame10, p42, Enum.Font.Gotham, 12, p43 or c.textDim
+          )
+
+          textLabel14.Size = UDim2.new(1, 0, 0, 0)
+          textLabel14.AutomaticSize = Enum.AutomaticSize.Y
+          textLabel14.TextWrapped = true
+          textLabel14.LayoutOrder = f8()
+
+          return {
+            Set = function(_, text10, textColor33)
+              textLabel14.Text = text10
+
+              if textColor33 then
+                textLabel14.TextColor3 = textColor33
+              end
+            end,
+          }
+        end
+
+        function v58:Toggle(p44, p45, p46, p47)
+          local textButton3 = Instance.new("TextButton")
+          textButton3.Size = UDim2.new(1, 0, 0, p45 and 46 or 32)
+          textButton3.BackgroundTransparency = 1
+          textButton3.AutoButtonColor = false
+          textButton3.Text = ""
+          textButton3.BorderSizePixel = 0
+          textButton3.LayoutOrder = f8()
+          textButton3.Parent = frame10
+
+          makeCorner(textButton3, 6)
+
+          local frame13 = Instance.new("Frame")
+          frame13.Size = UDim2.new(0, 6, 0, 6)
+          frame13.Position = UDim2.new(0, 8, 0, p45 and 12 or 13)
+          frame13.BackgroundColor3 = p46 and c.accent or c.textLo
+          frame13.BorderSizePixel = 0
+          frame13.Parent = textButton3
+
+          makeCorner(frame13, 3)
+
+          local textLabel15 = makeTextLabel(
+            textButton3, p44, Enum.Font.GothamMedium, 13, p46 and c.text or c.textDim
+          )
+
+          textLabel15.Size = UDim2.new(1, -80, 0, 20)
+          textLabel15.Position = UDim2.new(0, 22, 0, 2)
+
+          if p45 then
+            local textLabel16 = makeTextLabel(textButton3, p45, Enum.Font.Gotham, 11, c.textLo)
+            textLabel16.Size = UDim2.new(1, -80, 0, 14)
+            textLabel16.Position = UDim2.new(0, 22, 0, 24)
+          end
+
+          local v59 = p46 and true or false
+
+          local frame14 = Instance.new("Frame")
+          frame14.Size = UDim2.new(0, 46, 0, 24)
+          frame14.Position = UDim2.new(1, -52, 0, p45 and 11 or 4)
+          frame14.BackgroundColor3 = v59 and c.accent or c.bgInput
+          frame14.BorderSizePixel = 0
+          frame14.Parent = textButton3
+
+          makeCorner(frame14, 12)
+
+          local frame15 = Instance.new("Frame")
+          frame15.Size = UDim2.new(0, 18, 0, 18)
+          frame15.Position = v59 and UDim2.new(1, -21, 0.5, -9) or UDim2.new(0, 3, 0.5, -9)
+          frame15.BackgroundColor3 = Color3.new(1, 1, 1)
+          frame15.BorderSizePixel = 0
+          frame15.Parent = frame14
+
+          makeCorner(frame15, 9)
+
+          local v60 = {}
+
+          function v60:Set(p48)
+            v59 = self and true or false
+
+            getCreate(frame14, tweenInfo, { BackgroundColor3 = v59 and c.accent or c.bgInput })
+
+            getCreate(frame15, tweenInfo3, {
+              Position = v59 and UDim2.new(1, -21, 0.5, -9) or UDim2.new(0, 3, 0.5, -9),
+            })
+
+            getCreate(frame13, tweenInfo, { BackgroundColor3 = v59 and c.accent or c.textLo })
+            getCreate(textLabel15, tweenInfo, { TextColor3 = v59 and c.text or c.textDim })
+
+            if p47 and not p48 then
+              local ok14, result10 = pcall(p47, v59)
+
+              if not ok14 then
+                warn("[Veyronix] toggle '" .. p44 .. "': " .. tostring(result10))
+              end
+            end
+          end
+
+          function v60.Get()
+            return v59
+          end
+
+          textButton3.MouseButton1Click:Connect(function() v60.Set(not v59) end)
+
+          textButton3.MouseEnter:Connect(function()
+            getCreate(textButton3, tweenInfo, {
+              BackgroundTransparency = 0.9,
+              BackgroundColor3 = c.bgCardHi,
+            })
+          end)
+
+          textButton3.MouseLeave:Connect(function()
+            getCreate(textButton3, tweenInfo, { BackgroundTransparency = 1 })
+          end)
+
+          return v60
+        end
+
+        function v58:Slider(p49, p50, p51, p52, text11, p53)
+          local frame16 = Instance.new("Frame")
+          frame16.Size = UDim2.new(1, 0, 0, 46)
+          frame16.BackgroundTransparency = 1
+          frame16.LayoutOrder = f8()
+          frame16.Parent = frame10
+
+          makeTextLabel(frame16, p49, Enum.Font.GothamMedium, 13, c.text).Size = UDim2.new(
+            1, -70, 0, 18
+          )
+
+          local textLabel17 = makeTextLabel(
+            frame16, "", Enum.Font.Code, 12, c.accent, Enum.TextXAlignment.Right
+          )
+
+          textLabel17.Size = UDim2.new(0, 70, 0, 18)
+          textLabel17.Position = UDim2.new(1, -70, 0, 0)
+
+          local frame17 = Instance.new("Frame")
+          frame17.Size = UDim2.new(1, 0, 0, 6)
+          frame17.Position = UDim2.new(0, 0, 0, 30)
+          frame17.BackgroundColor3 = c.bgInput
+          frame17.BorderSizePixel = 0
+          frame17.Parent = frame16
+
+          makeCorner(frame17, 3)
+
+          local frame18 = Instance.new("Frame")
+          frame18.BackgroundColor3 = c.accent
+          frame18.BorderSizePixel = 0
+          frame18.Size = UDim2.new(0, 0, 1, 0)
+          frame18.Parent = frame17
+
+          makeCorner(frame18, 3)
+          local clamped2 = p52
+
+          local function f9()
+            local v61 = clamped2
+            frame18.Size = UDim2.new(math.clamp((v61 - p50) / (p51 - p50), 0, 1), 0, 1, 0)
+            textLabel17.Text = string.format(text11 or "%d", clamped2)
+          end
+
+          local function f10(x)
+            local clamp = math.clamp
+            local x2 = frame17.AbsolutePosition.X
+            local highest = math.max(1, frame17.AbsoluteSize.X)
+            local v62 = clamp((x - x2) / highest, 0, 1)
+            local rounded5 = p50 + (p51 - p50) * v62
+
+            if (text11 or "%d") == "%d" then
+              rounded5 = math.floor(rounded5 + 0.5)
+            end
+
+            clamped2 = rounded5
+            f9()
+
+            if p53 then
+              pcall(p53, clamped2)
+            end
+          end
+
+          local textButton4 = Instance.new("TextButton")
+          textButton4.Size = UDim2.new(1, 0, 0, 24)
+          textButton4.Position = UDim2.new(0, 0, 0, 22)
+          textButton4.BackgroundTransparency = 1
+          textButton4.Text = ""
+          textButton4.Parent = frame16
+
+          local flag4 = false
+
+          textButton4.InputBegan:Connect(function(input8)
+            if input8.UserInputType == Enum.UserInputType.MouseButton1
+              or input8.UserInputType == Enum.UserInputType.Touch then
+              flag4 = true
+              f10(input8.Position.X)
+            end
+          end)
+
+          table.insert(v47._conns, userInputService.InputChanged:Connect(function(input9)
+            if flag4
+              and (input9.UserInputType == Enum.UserInputType.MouseMovement
+                or input9.UserInputType == Enum.UserInputType.Touch) then
+              f10(input9.Position.X)
+            end
+          end))
+
+          table.insert(v47._conns, userInputService.InputEnded:Connect(function(input10)
+            if input10.UserInputType == Enum.UserInputType.MouseButton1
+              or input10.UserInputType == Enum.UserInputType.Touch then
+              flag4 = false
+            end
+          end))
+
+          f9()
+
+          return {
+            Get = function() return clamped2 end,
+            Set = function(p54, p55)
+              clamped2 = math.clamp(p54, p50, p51)
+              f9()
+
+              if p53 and not p55 then
+                pcall(p53, clamped2)
+              end
+            end,
+          }
+        end
+
+        function v58:Button(text12, p56)
+          local textButton5 = Instance.new("TextButton")
+          textButton5.Size = UDim2.new(1, 0, 0, touchEnabled and 40 or 32)
+          textButton5.BackgroundColor3 = c.bgInput
+          textButton5.AutoButtonColor = false
+          textButton5.Text = text12
+          textButton5.Font = Enum.Font.GothamMedium
+          textButton5.TextSize = 12
+          textButton5.TextColor3 = c.text
+          textButton5.BorderSizePixel = 0
+          textButton5.LayoutOrder = f8()
+          textButton5.Parent = frame10
+
+          makeCorner(textButton5, 6)
+
+          textButton5.MouseEnter:Connect(function()
+            getCreate(textButton5, tweenInfo, { BackgroundColor3 = c.bgHover })
+          end)
+
+          textButton5.MouseLeave:Connect(function()
+            getCreate(textButton5, tweenInfo, { BackgroundColor3 = c.bgInput })
+          end)
+
+          textButton5.MouseButton1Click:Connect(function()
+            local ok15, result11 = pcall(p56)
+
+            if not ok15 then
+              warn("[Veyronix] button '" .. text12 .. "': " .. tostring(result11))
+            end
+          end)
+
+          return textButton5
+        end
+
+        local function makeFrame(p57)
+          local frame19 = Instance.new("Frame")
+          frame19.Size = UDim2.new(1, 0, 0, 38)
+          frame19.BackgroundTransparency = 1
+          frame19.LayoutOrder = f8()
+          frame19.Parent = frame10
+
+          local textLabel18 = makeTextLabel(frame19, p57, Enum.Font.GothamMedium, 13, c.text)
+          textLabel18.Size = UDim2.new(0.45, 0, 1, 0)
+          textLabel18.TextTruncate = Enum.TextTruncate.AtEnd
+
+          return frame19
+        end
+
+        local function getInstance(parent7, p58, p59)
+          local instance19 = Instance.new(p59)
+          instance19.Size = UDim2.new(p58, 0, 0, 28)
+          instance19.AnchorPoint = Vector2.new(1, 0.5)
+          instance19.Position = UDim2.new(1, 0, 0.5, 0)
+          instance19.BackgroundColor3 = c.bgInput
+          instance19.BorderSizePixel = 0
+          instance19.Parent = parent7
+
+          makeCorner(instance19, 6)
+          return instance19, makeStroke(instance19, c.border, 1, 0.5)
+        end
+
+        function v58:Divider(p60)
+          local textLabel19 = makeTextLabel(
+            frame10, string.upper(p60), Enum.Font.GothamBold, 10, c.textLo
+          )
+
+          textLabel19.Size = UDim2.new(1, 0, 0, 16)
+          textLabel19.LayoutOrder = f8()
+        end
+
+        function v58:Input(p61, placeholderText, text13, p62)
+          local instance20, v63 = getInstance(makeFrame(p61), 0.5, "TextBox")
+          instance20.Font = Enum.Font.Code
+          instance20.TextSize = 12
+          instance20.TextColor3 = c.text
+          instance20.PlaceholderText = placeholderText or ""
+          instance20.PlaceholderColor3 = c.textLo
+          instance20.Text = text13 or ""
+          instance20.ClearTextOnFocus = false
+          instance20.TextTruncate = Enum.TextTruncate.AtEnd
+
+          makePadding(instance20, 0, 0, 8, 8)
+
+          instance20.Focused:Connect(function()
+            getCreate(v63, tweenInfo, { Color = c.accent, Transparency = 0.2 })
+          end)
+
+          instance20.FocusLost:Connect(function()
+            getCreate(v63, tweenInfo, { Color = c.border, Transparency = 0.5 })
+
+            if p62 then
+              pcall(p62, instance20.Text)
+            end
+          end)
+
+          return {
+            Get = function() return instance20.Text end,
+            Set = function(text14, p63)
+              instance20.Text = tostring(text14)
+
+              if p62 and not p63 then
+                pcall(p62, instance20.Text)
+              end
+            end,
+          }
+        end
+
+        function v58:Dropdown(p64, p65, text15, p66)
+          local v64 = p65
+          v64 = v64 or {}
+
+          local instance21, v65 = getInstance(makeFrame(p64), 0.5, "TextButton")
+          instance21.AutoButtonColor = false
+          instance21.Font = Enum.Font.Gotham
+          instance21.TextSize = 12
+          instance21.TextColor3 = c.text
+          instance21.TextXAlignment = Enum.TextXAlignment.Left
+          instance21.TextTruncate = Enum.TextTruncate.AtEnd
+
+          makePadding(instance21, 0, 0, 10, 24)
+
+          local textLabel20 = makeTextLabel(
+            instance21, "▾", Enum.Font.GothamBold, 12, c.accent, Enum.TextXAlignment.Center
+          )
+
+          textLabel20.Size = UDim2.new(0, 20, 1, 0)
+          textLabel20.Position = UDim2.new(1, 14, 0, 0)
+
+          local v66 = text15
+          instance21.Text = tostring(text15)
+
+          local v67 = {}
+
+          function v67.Get()
+            return v66
+          end
+
+          function v67:Set(p67)
+            v66 = self
+            instance21.Text = tostring(self)
+
+            if p66 and not p67 then
+              pcall(p66, self)
+            end
+          end
+
+          function v67.SetOptions(p68, p69)
+            local v68 = not p69
+            v64 = p68
+
+            if v68 or not table.find(p68, v66) then
+              v67.Set(p68[1], true)
+            end
+          end
+
+          local function f11()
+            if v47._popup then
+              v47._popup:Destroy()
+              v47._popup = nil
+            end
+          end
+
+          instance21.MouseButton1Click:Connect(function()
+            f11()
+
+            local textButton6 = Instance.new("TextButton")
+            textButton6.Size = UDim2.new(1, 0, 1, 0)
+            textButton6.BackgroundTransparency = 1
+            textButton6.Text = ""
+            textButton6.ZIndex = 60
+            textButton6.AutoButtonColor = false
+            textButton6.Parent = screenGui
+
+            v47._popup = textButton6
+            textButton6.MouseButton1Click:Connect(f11)
+            local list2 = #v64 > 0 and v64 or { "(empty)" }
+            local scrollingFrame2 = Instance.new("ScrollingFrame")
+            local lowest = math.min(#list2 * 28 + 8, 188)
+
+            scrollingFrame2.Size = UDim2.new(0, instance21.AbsoluteSize.X, 0, 0)
+            scrollingFrame2.ClipsDescendants = true
+
+            scrollingFrame2.Position = UDim2.new(0, instance21.AbsolutePosition.X, 0, instance21.AbsolutePosition.Y
+              + instance21.AbsoluteSize.Y + 4)
+
+            scrollingFrame2.BackgroundColor3 = c.bgCardHi
+            scrollingFrame2.BorderSizePixel = 0
+            scrollingFrame2.ZIndex = 61
+            scrollingFrame2.ScrollBarThickness = 3
+            scrollingFrame2.ScrollBarImageColor3 = c.accentDim
+            scrollingFrame2.AutomaticCanvasSize = Enum.AutomaticSize.Y
+            scrollingFrame2.CanvasSize = UDim2.new()
+            scrollingFrame2.Parent = textButton6
+
+            makeCorner(scrollingFrame2, 8)
+            makeStroke(scrollingFrame2, c.accentDim, 1, 0.3)
+            makePadding(scrollingFrame2, 4, 4, 4, 4)
+
+            local uiListLayout4 = Instance.new("UIListLayout")
+            uiListLayout4.Padding = UDim.new(0, 2)
+            uiListLayout4.Parent = scrollingFrame2
+
+            for _, value6 in ipairs(list2) do
+              local textButton7 = Instance.new("TextButton")
+              textButton7.Size = UDim2.new(1, 0, 0, 26)
+              textButton7.AutoButtonColor = false
+              textButton7.BorderSizePixel = 0
+              textButton7.ZIndex = 62
+              textButton7.BackgroundColor3 = c.bgHover
+              textButton7.BackgroundTransparency = value6 == v66 and 0.5 or 1
+              textButton7.Text = tostring(value6)
+              textButton7.Font = Enum.Font.Gotham
+              textButton7.TextSize = 12
+              textButton7.TextColor3 = value6 == v66 and c.accent or c.text
+              textButton7.Parent = scrollingFrame2
+
+              makeCorner(textButton7, 5)
+
+              textButton7.MouseEnter:Connect(function()
+                getCreate(textButton7, tweenInfo, { BackgroundTransparency = 0.6 })
+              end)
+
+              textButton7.MouseLeave:Connect(function()
+                getCreate(textButton7, tweenInfo, {
+                  BackgroundTransparency = value6 == v66 and 0.5 or 1,
+                })
+              end)
+
+              textButton7.MouseButton1Click:Connect(function()
+                f11()
+
+                if value6 ~= "(empty)" then
+                  v67.Set(value6)
+                end
+              end)
+            end
+
+            getCreate(scrollingFrame2, tweenInfo2, {
+              Size = UDim2.new(0, instance21.AbsoluteSize.X, 0, lowest),
+            })
+          end)
+
+          instance21.MouseEnter:Connect(function()
+            getCreate(v65, tweenInfo, { Color = c.accentDim, Transparency = 0.2 })
+          end)
+
+          instance21.MouseLeave:Connect(function()
+            getCreate(v65, tweenInfo, { Color = c.border, Transparency = 0.5 })
+          end)
+
+          return v67
+        end
+
+        function v58:Keybind(p70, p71, p72)
+          local instance22, v69 = getInstance(makeFrame(p70), 0.25, "TextButton")
+          instance22.AutoButtonColor = false
+          instance22.Font = Enum.Font.Code
+          instance22.TextSize = 12
+          instance22.TextColor3 = c.accent
+
+          local v70 = p71
+          instance22.Text = v70.Name
+
+          local v71 = {}
+
+          function v71.Get()
+            return v70
+          end
+
+          function v71:Set(p73)
+            local v72 = self
+
+            if typeof(v72) == "string" then
+              v72 = Enum.KeyCode[v72]
+            end
+
+            if typeof(v72) ~= "EnumItem" then
+              return
+            end
+
+            v70 = v72
+            instance22.Text = v72.Name
+
+            if p72 and not p73 then
+              pcall(p72, v72)
+            end
+          end
+
+          instance22.MouseButton1Click:Connect(function()
+            instance22.Text = "..."
+            getCreate(v69, tweenInfo, { Color = c.accent, Transparency = 0.1 })
+            local inputBegan = userInputService.InputBegan
+
+            local connect3
+
+            connect3 = inputBegan:Connect(function(p74)
+              if p74.UserInputType ~= Enum.UserInputType.Keyboard then
+                return
+              end
+
+              connect3:Disconnect()
+              getCreate(v69, tweenInfo, { Color = c.border, Transparency = 0.5 })
+
+              if p74.KeyCode == Enum.KeyCode.Escape then
+                instance22.Text = v70.Name
+              else
+                v71.Set(p74.KeyCode)
+              end
+            end)
+          end)
+
+          return v71
+        end
+
+        return v58
+      end
+
+      return v57
+    end
+
+    return v47
+  end
+
+  return v42
+end
+
+local ok9, result7 = pcall(veyronixWindUI)
+
+if not ok9 or type(result7) ~= "table" then
+  warn("[Veyronix] WindUI unavailable, using the built-in UI: " .. tostring(result7))
+  ok9, result7 = pcall(veyronixOriginalUI)
+end
+
+if not ok9 or type(result7) ~= "table" then
+  v1.VEYRONIX_LOADED = nil
+  return f2("Interface failed: " .. tostring(result7), "error")
+end
+
+v1.VeyronixUI = result7
+
+local ok16, result12 = pcall(function()
+  local localPlayer3 = players.LocalPlayer
+
+  if not result7 then
+    return warn("[Veyronix] VeyronixUI is not loaded")
+  end
+
+  if string.format("%.0f", game.PlaceId) ~= "120219252362013" then
+    return warn("[Veyronix] unexpected PlaceId for this module: " .. tostring(game.PlaceId))
+  end
+
+  local v73 = { ThrowRemotePath = nil, ThrowArgs = nil }
+
+  local v74 = {
+    Features = {
+      AutoPerfect = { mode = "toggle", set = nil },
+      InstantThrow = { mode = "toggle", set = nil },
+      Auto2xPress = { mode = "toggle", set = nil },
+      AutoTrain = { mode = "toggle", set = nil },
+      AutoEquipBest = { mode = "loop", intervalFlag = "EquipDelay", run = nil },
+      FarmAnimals = { mode = "loop", interval = 0.2, run = nil },
+      UpgradeBars = { mode = "loop", interval = 1, run = nil },
+      UpgradePlot = { mode = "loop", interval = 1, run = nil },
+      UpgradeFood = { mode = "loop", interval = 1, run = nil },
+      AutoSell = { interval = 5 },
+    },
+    Sell = nil,
+    Data = {
+      GetAnimals = nil,
+      Mutations = nil,
+      Rarities = nil,
+      Animals = nil,
+    },
+  }
+
+  local veyronixThrowState = {
+    alive = true,
+    conns = {},
+    walkOn = false,
+    walkSpeed = 16,
+    jumpOn = false,
+    jumpPower = 50,
+    infJump = false,
+    noclip = false,
+    antiAfk = false,
+    spyOn = false,
+    log = {},
+    logMax = 200,
+    selected = nil,
+    replayOn = false,
+    replayDelay = 1,
+    replayCount = 0,
+  }
+
+-- https://leakd.fr
+  local function getConnect(connect4)
+    table.insert(veyronixThrowState.conns, connect4)
+    return connect4
+  end
+
+  local function getHumanoid()
+    local character = localPlayer3.Character
+    return character and character:FindFirstChildOfClass("Humanoid")
+  end
+
+  local instance23 = result7.Window({
+    guiName = "VeyronixHub",
+    subtitle = "Throw Food For Animals  ·  RightShift: toggle UI",
+    footer = "Veyronix Hub · Throw Food For Animals",
+    keyInfo = function()
+      return "● online", result7.C.accent
+    end,
+  })
+
+  local tab = instance23:Tab("main", "Throw", "★")
+  local tabAnimals = instance23:Tab("animals", "Animals", "★")
+  local tab2 = instance23:Tab("farm", "Farm", "➤")
+  local tab3 = instance23:Tab("upgrades", "Upgrades", "▲")
+  local tab4 = instance23:Tab("sell", "Sell", "$")
+  local tab6 = instance23:Tab("recon", "Recon", "◐")
+  local tab5 = instance23:Tab("webhook", "Webhook", "✉")
+  local tab7 = instance23:Tab("set", "Settings", "≡")
+  local tabPerf = instance23:Tab("performance", "Performance", "≡")
+  local map2 = {}
+  local v75 = {}
+
+  local v76 = {
+    ConfigName = true,
+    ImportText = true,
+    SelectedConfig = true,
+    AutoLoad = true,
+  }
+
+  local v77 = { WebhookURL = true }
+
+  local function getToggle(p75, key4, p76, p77, p78, p79)
+    map2[key4] = p78
+
+    local toggle
+
+    toggle = p75:Toggle(p76, p77, p78, function(p80)
+      map2[key4] = p80
+
+      if p79 then
+        p79(p80, toggle)
+      end
+    end)
+
+    v75[key4] = { kind = "boolean", set = function(p81) toggle.Set(p81) end }
+    return toggle
+  end
+
+  local function getSlider(p82, key5, p83, p84, p85, p86, p87, p88)
+    map2[key5] = p86
+
+    local slider = p82:Slider(p83, p84, p85, p86, p87, function(p89)
+      map2[key5] = p89
+
+      if p88 then
+        p88(p89)
+      end
+    end)
+
+    v75[key5] = { kind = "number", set = function(p90) slider.Set(p90) end }
+    return slider
+  end
+
+  local function getInput(p91, key6, p92, p93, p94, p95)
+    map2[key6] = p94 or ""
+
+    local input11 = p91:Input(p92, p93, p94, function(p96)
+      map2[key6] = p96
+
+      if p95 then
+        p95(p96)
+      end
+    end)
+
+    v75[key6] = { kind = "string", set = function(p97) input11.Set(p97) end }
+    return input11
+  end
+
+  local function getDropdown(p98, key7, p99, p100, p101, p102)
+    map2[key7] = p101
+
+    local dropdown = p98:Dropdown(p99, p100, p101, function(p103)
+      map2[key7] = p103
+
+      if p102 then
+        p102(p103)
+      end
+    end)
+
+    v75[key7] = { kind = "string", set = function(p104) dropdown.Set(p104) end }
+    return dropdown
+  end
+
+  local function getMultiDropdown(p98, key7, p99, p100, p101, p102)
+    map2[key7] = type(p101) == "table" and table.clone(p101) or {}
+    local callback = function(value)
+      map2[key7] = type(value) == "table" and table.clone(value) or {}
+      if p102 then p102(map2[key7]) end
+    end
+    local dropdown
+    if type(p98.MultiDropdown) == "function" then
+      dropdown = p98:MultiDropdown(p99, p100, map2[key7], callback)
+    else
+      -- Compatibility fallback for UI backends without multi-select support.
+      dropdown = p98:Dropdown(p99, p100, p100[1], function(value)
+        callback(value and { value } or {})
+      end)
+    end
+    v75[key7] = { kind = "table", set = function(value) dropdown.Set(value) end }
+    return dropdown
+  end
+
+  local function f12(text16)
+    if type(text16) == "number" then
+      return text16
+    end
+
+    if type(text16) ~= "string" then
+      return nil
+    end
+
+    local upper2 = text16:gsub("[%s,]", ""):upper()
+
+    if upper2 == "" then
+      return nil
+    end
+
+    local v78, v79 = upper2:match("^(%d*%.?%d+)([KMBT]?)$")
+
+    if not v78 then
+      return nil
+    end
+
+    return tonumber(v78) * (({
+      K = 1000,
+      M = 1000000,
+      B = 1000000000,
+      T = 1000000000000,
+    })[v79] or 1)
+  end
+
+  local function f13(p105)
+    return p105.mode == "loop" and type(p105.run) == "function"
+      or p105.mode == "toggle" and type(p105.set) == "function"
+  end
+
+  local map3 = {}
+
+  local function f14(p106, key8, p107, p108, key9)
+    local v80 = v74.Features[key9]
+
+    return getToggle(p106, key8, p107, p108, false, function(p109, p110)
+      if p109 and not f13(v80) then
+        instance23:Toast("Not configured", p107 .. ": GAME.Features." .. key9 .. "."
+          .. (v80.mode == "loop" and "run" or "set") .. " = nil", 4)
+
+        map2[key8] = false
+        p110.Set(false, true)
+        return
+      end
+
+      map3[key8] = (map3[key8] or 0) + 1
+      local v81 = map3[key8]
+
+      if v80.mode == "toggle" then
+        local ok17, result13, v82 = pcall(v80.set, p109)
+
+        if not ok17 or result13 == false then
+          instance23:Toast(
+            "Action failed", p107 .. ": " .. tostring(ok17 and v82 or result13):sub(1, 60), 5
+          )
+
+          if p109 then
+            map2[key8] = false
+            p110.Set(false, true)
+          end
+        end
+
+        return
+      end
+
+      if not p109 then
+        return
+      end
+
+      task.spawn(function()
+        local v83 = 0
+
+        while veyronixThrowState.alive and map2[key8] and map3[key8] == v81 do
+          local ok18, result14 = pcall(v80.run, map2)
+
+          if ok18 then
+            v83 = 0
+          else
+            v83 = v83 + 1
+
+            if v83 >= 5 then
+              instance23:Toast(
+                p107, "disabled after 5 errors: " .. tostring(result14):sub(1, 40), 5
+              )
+
+              map2[key8] = false
+              p110.Set(false, true)
+              break
+            end
+          end
+
+          task.wait(math.max(v80.interval or map2[v80.intervalFlag] or 1, 0.03))
+        end
+      end)
+    end)
+  end
+
+  local function f15(p111)
+    local ok19, result15 = pcall(function() return require(p111) end)
+
+    if ok19 then
+      return result15
+    end
+
+    return nil
+  end
+
+  local v84 = {}
+
+  local function f16(key10, fn)
+    local v85 = v84[key10]
+
+    if v85 ~= nil then
+      return v85
+    end
+
+    local v86 = fn()
+
+    if v86 ~= nil then
+      v84[key10] = v86
+    end
+
+    return v86
+  end
+
+  local function getFindFirstChild(instance24, p112)
+    return instance24 and instance24:FindFirstChild(p112)
+  end
+
+  local function f17(p113)
+    return f16("cfg:" .. p113, function()
+      return f15(getFindFirstChild(getFindFirstChild(replicatedStorage, "Config"), p113))
+    end)
+  end
+
+  local function f18(p114)
+    return f16("sh:" .. p114, function()
+      return f15(getFindFirstChild(getFindFirstChild(replicatedStorage, "Shared"), p114))
+    end)
+  end
+
+  local function f19()
+    return f16("dc", function()
+      return f15(getFindFirstChild(getFindFirstChild(getFindFirstChild(getFindFirstChild(
+        localPlayer3, "PlayerScripts"
+      ), "Client"), "Controllers"), "DataController"))
+    end)
+  end
+
+  local function f20()
+    local v87 = f19()
+
+    if v87 and v87.GetPlayerData then
+      local ok20, playerData = pcall(v87.GetPlayerData, v87)
+
+      if ok20 and type(playerData) == "table" then
+        return playerData
+      end
+    end
+
+    return nil
+  end
+
+  local function f21(p115)
+    local findFirstChild2 = getFindFirstChild(
+      getFindFirstChild(replicatedStorage, "Remotes"), p115
+    )
+
+    if findFirstChild2 and findFirstChild2:IsA("RemoteFunction") then
+      return findFirstChild2
+    end
+
+    return nil
+  end
+
+  local function f22(p116, p117)
+    local findFirstChild3 = getFindFirstChild(getFindFirstChild(replicatedStorage, p116), p117)
+
+    if findFirstChild3 and findFirstChild3:IsA("RemoteEvent") then
+      return findFirstChild3
+    end
+
+    return nil
+  end
+
+  local function f23(p118, ...)
+    local v88 = f21(p118)
+
+    if not v88 then
+      return false, "missing remote: Remotes." .. p118
+    end
+
+    return pcall(v88.InvokeServer, v88, ...)
+  end
+
+  local function f24(p119, p120)
+    return p119 and type(p120) == "table" and p120.Ok == true
+  end
+
+  local function f25(p121, p122)
+    if not p121 then
+      return tostring(p122)
+    end
+
+    if type(p122) == "table" then
+      return tostring(p122.Reason or "rejected")
+    end
+
+    return tostring(p122)
+  end
+
+  local function f26(list3, key11)
+    local list4 = {}
+
+    if type(list3) == "table" then
+      for _, value7 in ipairs(list3) do
+        if type(value7) == "table" and type(value7[key11]) == "string" then
+          list4[#list4 + 1] = value7[key11]
+        end
+      end
+    end
+
+    return list4
+  end
+
+  local mutationsConfig = f17("MutationsConfig")
+  local rarityConfig = f17("RarityConfig")
+  local animalEconomy = f17("AnimalEconomy")
+
+  if mutationsConfig then
+    local list5 = f26(mutationsConfig.List, "Name")
+    list5[#list5 + 1] = "None"
+    v74.Data.Mutations = list5
+  end
+
+  if rarityConfig then
+    v74.Data.Rarities = f26(rarityConfig.List, "Name")
+  end
+
+  if animalEconomy and type(animalEconomy.List) == "table" then
+    local animals = {}
+
+    for key12 in pairs(animalEconomy.List) do
+      if type(key12) == "string" then
+        animals[#animals + 1] = key12
+      end
+    end
+
+    table.sort(animals)
+    v74.Data.Animals = animals
+  end
+
+  local function getFindFirstChild2()
+    local plots = workspace:FindFirstChild("Plots")
+    local plotIndex = localPlayer3:GetAttribute("PlotIndex")
+    return plots and plotIndex and plots:FindFirstChild(tostring(plotIndex))
+  end
+
+  local flag5 = false
+
+  local function f27()
+    local v89 = getgenv and getgenv() or _G
+    v89.__VeyronixThrowState = veyronixThrowState
+
+    if flag5 or v89.__VeyronixThrowHooked then
+      flag5 = true
+      return true
+    end
+
+    if not (hookmetamethod and getnamecallmethod and setnamecallmethod and newcclosure
+      and checkcaller) then
+      return false, "executor does not support hookmetamethod/getnamecallmethod/setnamecallmethod/newcclosure/checkcaller"
+    end
+
+    local v90
+
+    v90 = hookmetamethod(game, "__namecall", newcclosure(function(p123, ...)
+      local namecallmethod = getnamecallmethod()
+      local veyronixThrowState2 = v89.__VeyronixThrowState
+
+      local autoPerfect = namecallmethod == "InvokeServer" and veyronixThrowState2
+        and veyronixThrowState2.alive
+        and (veyronixThrowState2.autoPerfect or veyronixThrowState2.instantThrow)
+        and not checkcaller()
+
+      local packed
+
+      if autoPerfect then
+        local ok21, result16 = pcall(function()
+          return typeof(p123) == "Instance" and p123.Name or nil
+        end)
+
+        if ok21 and result16 == "Throw_Resolve" then
+          setnamecallmethod(namecallmethod)
+
+          if veyronixThrowState2.autoPerfect then
+            packed = table.pack(v90(p123, 1, 1))
+          else
+            packed = table.pack(v90(p123, ...))
+          end
+
+          if veyronixThrowState2.instantThrow and type(packed[1]) == "table" and packed[1].Ok then
+            task.defer(function()
+              task.wait(0.08)
+              f21("Throw_Complete")
+            end)
+          end
+
+          return table.unpack(packed, 1, packed.n)
+        end
+      end
+
+      setnamecallmethod(namecallmethod)
+      return v90(p123, ...)
+    end))
+
+    flag5 = true
+    v89.__VeyronixThrowHooked = true
+    return true
+  end
+
+  function v74.Features.AutoPerfect.set(autoPerfect2)
+    veyronixThrowState.autoPerfect = autoPerfect2
+
+    if autoPerfect2 then
+      local v91, v92 = f27()
+
+      if not v91 then
+        veyronixThrowState.autoPerfect = false
+        return false, v92
+      end
+    end
+
+    return true
+  end
+
+  function v74.Features.InstantThrow.set(instantThrow)
+    veyronixThrowState.instantThrow = instantThrow
+
+    if instantThrow then
+      local v93, v94 = f27()
+
+      if not v93 then
+        veyronixThrowState.instantThrow = false
+        return false, v94
+      end
+    end
+
+    return true
+  end
+
+  local connect5
+
+  function v74.Features.Auto2xPress.set(p124)
+    if connect5 then
+      connect5:Disconnect()
+      connect5 = nil
+    end
+
+    if not p124 then
+      return true
+    end
+
+    local v95 = f22("Remotes", "Training_Bonus")
+
+    if not v95 then
+      return false, "Remotes.Training_Bonus is missing"
+    end
+
+    if not f21("Training_TapBonus") then
+      return false, "Remotes.Training_TapBonus is missing"
+    end
+
+    veyronixThrowState.tapCount = 0
+    veyronixThrowState.tapOk = 0
+
+    connect5 = v95.OnClientEvent:Connect(function(p125, p126)
+      if not veyronixThrowState.alive then
+        return
+      end
+
+      task.spawn(function()
+        local v96, v97 = f23("Training_TapBonus", p125)
+        veyronixThrowState.tapCount = veyronixThrowState.tapCount + 1
+
+        if f24(v96, v97) then
+          veyronixThrowState.tapOk = veyronixThrowState.tapOk + 1
+        end
+
+        if veyronixThrowState.tapLbl then
+          veyronixThrowState.tapLbl:Set(string.format(
+            "2x Press: %d events, %d accepted (last: id=%s -> %s)", veyronixThrowState.tapCount,
+            veyronixThrowState.tapOk, tostring(p125), f24(v96, v97) and "ok" or f25(v96, v97)
+          ))
+        end
+      end)
+    end)
+
+    getConnect(connect5)
+
+    if veyronixThrowState.tapLbl then
+      veyronixThrowState.tapLbl:Set("2x Press: enabled, waiting for a bonus (only appears during training)")
+    end
+
+    return true
+  end
+
+  local count3 = 0
+
+  local function f28()
+    local findFirstChild4 = getFindFirstChild2()
+    local gameConfig = f17("GameConfig")
+
+    local trainingSpotOffset = gameConfig and gameConfig.Plot
+      and gameConfig.Plot.TrainingSpotOffset
+
+    if findFirstChild4 and typeof(trainingSpotOffset) == "Vector3" then
+      return findFirstChild4.Position + trainingSpotOffset
+    end
+
+    return nil
+  end
+
+  local function getHumanoidRootPart()
+    local character2 = localPlayer3.Character
+    return character2 and character2:FindFirstChild("HumanoidRootPart")
+  end
+
+  local function f29()
+    return f16("tc", function()
+      return f15(getFindFirstChild(getFindFirstChild(getFindFirstChild(getFindFirstChild(
+        localPlayer3, "PlayerScripts"
+      ), "Client"), "Controllers"), "TrainingController"))
+    end)
+  end
+
+  local function f30()
+    local v98 = f29()
+
+    if v98 and v98.IsRunning then
+      local ok22, result17 = pcall(v98.IsRunning)
+      return ok22 and result17 == true
+    end
+
+    return false
+  end
+
+  function v74.Features.AutoTrain.set(p127)
+    count3 = count3 + 1
+    local v99 = count3
+
+    if not p127 then
+      if f30() then
+        pcall(f29().Stop)
+      else
+        f23("Training_Stop")
+      end
+
+      local humanoidRootPart = getHumanoidRootPart()
+
+      if humanoidRootPart and veyronixThrowState.trainHome then
+        humanoidRootPart.CFrame = veyronixThrowState.trainHome
+      end
+
+      veyronixThrowState.trainHome = nil
+      return true
+    end
+
+    local v100 = f28()
+    local humanoidRootPart2 = getHumanoidRootPart()
+
+    if not (v100 and humanoidRootPart2) then
+      return false, "plot or character not found"
+    end
+
+    local v101 = f20()
+
+    if v101 and (tonumber(v101.Stand) or 0) < 1 then
+      return false, "buy the first bar (Stand) first"
+    end
+
+    veyronixThrowState.trainHome = humanoidRootPart2.CFrame
+
+    local function f31()
+      local humanoidRootPart3 = getHumanoidRootPart()
+
+      if humanoidRootPart3 then
+        humanoidRootPart3.CFrame = CFrame.new(v100 + Vector3.new(0, 3, 0))
+      end
+    end
+
+    f31()
+
+    task.spawn(function()
+      local v102 = 0
+
+      while veyronixThrowState.alive and count3 == v99 and map2.AutoTrain do
+        task.wait(0.5)
+        local humanoidRootPart4 = getHumanoidRootPart()
+
+        if humanoidRootPart4 then
+          if f30() then
+            v102 = 0
+            local x3 = humanoidRootPart4.Position.X
+            local x4 = v100.X
+            local v103 = humanoidRootPart4.Position.Z - v100.Z
+            local v104 = x3 - x4
+
+            if math.sqrt(v104 * v104 + v103 * v103) > 6 then
+              f31()
+            end
+          else
+            v102 = v102 + 0.5
+
+            if v102 >= 3 then
+              v102 = 0
+              humanoidRootPart4.CFrame = CFrame.new(v100 + Vector3.new(14, 3, 0))
+              task.wait(0.6)
+              f31()
+            end
+          end
+        end
+      end
+    end)
+
+    return true
+  end
+
+  function v74.Features.AutoEquipBest.run()
+    local v105, v106 = f23("Plot_EquipBest")
+
+    if not v105 then
+      error(tostring(v106))
+    end
+  end
+
+  local function f32(format)
+    if veyronixThrowState.farmLbl then
+      veyronixThrowState.farmLbl:Set(format)
+    end
+  end
+
+  function v74.Features.FarmAnimals.run()
+    -- Move to the requested throw-area coordinates as soon as Auto Farm starts.
+    local rootOk, root = pcall(getHumanoidRootPart)
+    if rootOk and root then
+      local targetPosition = Vector3.new(9.902131080627441, 5.7248406410217285, -34.73972702026367)
+      if (root.Position - targetPosition).Magnitude > 3 then
+        root.CFrame = CFrame.new(targetPosition)
+        root.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+        task.wait(0.45)
+      end
+    end
+
+    veyronixThrowState.farmCycle = (veyronixThrowState.farmCycle or 0) + 1
+    local farmCycle = veyronixThrowState.farmCycle
+    f32(("cycle %d: Throw_Start..."):format(farmCycle))
+    local v107, v108 = f23("Throw_Start")
+
+    if not f24(v107, v108) then
+      local v109 = f25(v107, v108)
+      f32(("cycle %d: Throw_Start rejected (%s); retrying"):format(farmCycle, v109))
+
+      if v109 == "Training" then
+        error("stop training before throwing (is Auto Train enabled?)")
+      end
+
+      task.wait(2)
+      return
+    end
+
+    task.wait(0.57)
+    local v110, v111 = f23("Throw_Resolve", 1, 1)
+
+    if not f24(v110, v111) then
+      f23("Throw_Cancel")
+      f32(("cycle %d: Throw_Resolve rejected (%s)"):format(farmCycle, f25(v110, v111)))
+      error("Throw_Resolve rejected: " .. f25(v110, v111))
+    end
+
+    task.wait(0.14)
+    local v112, v113 = f23("Throw_Complete")
+
+    f32(("cycle %d: %s -> Complete %s"):format(farmCycle, tostring(type(v113) == "table" and v113.ModelName
+      or ""), v112 and "ok" or tostring(v113)))
+
+    if not v112 then
+      error(tostring(v113))
+    end
+
+    task.wait(1.6)
+    task.wait(tonumber(map2.FarmPause) or 0)
+  end
+
+  local function getPosition()
+    local findFirstChild5 = getFindFirstChild2()
+    return findFirstChild5 and findFirstChild5.Position
+  end
+
+  local function getCframe(p128)
+    if not map2.TeleportSpots then
+      return nil
+    end
+
+    local humanoidRootPart5 = getHumanoidRootPart()
+    local position6 = getPosition()
+    local gameConfig2 = f17("GameConfig")
+
+    if not (humanoidRootPart5 and position6 and gameConfig2 and gameConfig2.Plot) then
+      return nil
+    end
+
+    local v114, vector, v115
+
+    if p128 == "stand" then
+      local v116 = position6 + gameConfig2.Plot.UpgradeButtonOffset
+      local v117 = position6 + gameConfig2.Plot.TrainingSpotOffset
+      local vector2 = Vector3.new(v116.X - v117.X, 0, v116.Z - v117.Z)
+
+      v114 = v116 + (vector2.Magnitude > 0.1 and vector2.Unit or Vector3.new(0, 0, -1)) * 3.8
+        + Vector3.new(0, 3, 0)
+
+      vector = Vector3.new(v116.X, v114.Y, v116.Z)
+      v115 = 7
+    else
+      local fenceConfig = f17("FenceConfig")
+
+      if not (fenceConfig and fenceConfig.SignOffset) then
+        return nil
+      end
+
+      local v118 = position6 + fenceConfig.SignOffset
+      v114 = v118 + Vector3.new(0, 3, 6)
+      vector = Vector3.new(v118.X, v114.Y, v118.Z)
+      v115 = 12
+    end
+
+    if (humanoidRootPart5.Position - v114).Magnitude < v115 then
+      return nil
+    end
+
+    local cframe = humanoidRootPart5.CFrame
+
+    humanoidRootPart5.CFrame = CFrame.lookAt(v114, vector)
+    humanoidRootPart5.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+
+    task.wait(0.3)
+    return cframe
+  end
+
+  local function f33(cframe2)
+    local humanoidRootPart6 = getHumanoidRootPart()
+
+    if cframe2 and humanoidRootPart6 then
+      humanoidRootPart6.CFrame = cframe2
+      humanoidRootPart6.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+    end
+  end
+
+  local function f34(p129, p130)
+    local cframe3 = getCframe(p130)
+    local v119, v120 = f23(p129)
+    f33(cframe3)
+
+    if not v119 then
+      error(tostring(v120))
+    end
+
+    if type(v120) == "table" and v120.Ok == false and v120.Reason ~= "Money" then
+      error(p129 .. ": " .. tostring(v120.Reason))
+    end
+  end
+
+  function v74.Features.UpgradeBars.run()
+    local v121 = f20() or {}
+    local standsConfig = f17("StandsConfig")
+    local v122 = (tonumber(v121.Stand) or 0) + 1
+
+    if standsConfig and type(standsConfig.All) == "table" then
+      local v123 = standsConfig.All[v122]
+
+      if not v123 then
+        return
+      end
+
+      if type(v121.Money) == "number" and v121.Money < v123.Price then
+        return
+      end
+    end
+
+    f34("Stand_Upgrade", "stand")
+  end
+
+  function v74.Features.UpgradePlot.run()
+    local v124 = f20() or {}
+    local fenceConfig2 = f17("FenceConfig")
+
+    if fenceConfig2 and fenceConfig2.Get then
+      local v125 = fenceConfig2.Get((tonumber(v124.FenceLevel) or 0) + 1)
+
+      if not v125 then
+        return
+      end
+
+      if type(v124.Money) == "number" and v124.Money < v125.Price then
+        return
+      end
+    end
+
+    f34("Plot_UpgradeFence", "fence")
+  end
+
+  function v74.Features.UpgradeFood.run()
+    local v126 = f20() or {}
+    local foodsConfig = f17("FoodsConfig")
+    local v127 = 0
+
+    if type(v126.OwnedFoods) == "table" then
+      for key13, value8 in pairs(v126.OwnedFoods) do
+        local v128 = tonumber(key13)
+
+        if value8 and v128 and v128 > v127 then
+          v127 = v128
+        end
+      end
+    end
+
+    if v127 == 0 then
+      v127 = tonumber(v126.EquippedFood) or 0
+    end
+
+    local v129 = v127 + 1
+
+    if foodsConfig and type(foodsConfig.All) == "table" then
+      local v130 = foodsConfig.All[v129]
+
+      if not v130 then
+        return
+      end
+
+      if type(v126.Money) == "number" and v126.Money < v130.Price then
+        return
+      end
+    end
+
+    local v131, v132 = f23("Shop_Buy", v129)
+
+    if not v131 then
+      error(tostring(v132))
+    end
+  end
+
+  function v74.Data.GetAnimals()
+    local v133 = f20()
+    local list6 = {}
+    local animals2 = v133 and v133.Animals
+
+    if type(animals2) ~= "table" then
+      return list6
+    end
+
+    local animalEconomy2 = f17("AnimalEconomy")
+    local mutations = f18("Mutations")
+    local bestIncome = localPlayer3:GetAttribute("BestIncome") or 0
+
+    for key14, value9 in pairs(animals2) do
+      if type(value9) == "table" then
+        local v134
+
+        if animalEconomy2 and animalEconomy2.Get then
+          local ok23, result18 = pcall(animalEconomy2.Get, value9.ModelName)
+
+          if ok23 then
+            v134 = result18
+          end
+        end
+
+        local cps
+
+        if mutations and mutations.IncomeOf then
+          local ok24, result19 = pcall(mutations.IncomeOf, value9, bestIncome)
+
+          if ok24 and type(result19) == "number" then
+            cps = result19
+          end
+        end
+
+        list6[#list6 + 1] = {
+          Id = key14,
+          Name = value9.ModelName,
+          Rarity = v134 and v134.Rarity,
+          Mutation = value9.Mutation,
+          CPS = cps,
+          Weight = v134 and v134.Weight,
+          Placed = value9.Placed == true,
+          Bought = value9.Bought == true,
+          Size = value9.Size,
+        }
+      end
+    end
+
+    return list6
+  end
+
+  function v74.Sell(list7)
+    local count4 = 0
+
+    for _, value10 in ipairs(list7) do
+      if not veyronixThrowState.alive then
+        break
+      end
+
+      if not value10.Bought and not value10.Placed then
+        local v135, v136 = f23("Plot_SellAnimal", value10.Id)
+
+        if f24(v135, v136) then
+          count4 = count4 + 1
+        end
+
+        task.wait(0.2)
+      end
+    end
+
+    return count4 > 0
+  end
+
+  local throw = tab:Card("THROW")
+  f14(throw, "AutoPerfect", "Auto Perfect", "tap at the peak of the meter", "AutoPerfect")
+  veyronixThrowState.perfectLbl = throw:Label("Auto Perfect sends (1, 1) to Throw_Resolve. You still tap to stop the meter.")
+
+  f14(
+    throw, "InstantThrow", "Instant Throw", "completes the throw shortly after Resolve",
+    "InstantThrow"
+  )
+
+  local training = tab:Card("TRAINING")
+
+  f14(training, "Auto2xPress", "Auto 2x Press", "requires active training", "Auto2xPress")
+
+  f14(
+    training, "AutoTrain", "Auto Train", "teleports to the treadmill and stays there",
+    "AutoTrain"
+  )
+
+  veyronixThrowState.tapLbl = training:Label("2x Press: disabled")
+  local equipANIMALS = tabAnimals:Card("EQUIP ANIMALS")
+  f14(equipANIMALS, "AutoEquipBest", "Auto Equip Best", nil, "AutoEquipBest")
+  getSlider(equipANIMALS, "EquipDelay", "Delay (s)", 1, 120, 30, "%d")
+
+  local character3 = tabAnimals:Card("CHARACTER")
+
+  character3:Toggle("WalkSpeed", "keeps movement speed at the slider value", false, function(walkOn)
+    veyronixThrowState.walkOn = walkOn
+
+    if not walkOn then
+      local humanoid = getHumanoid()
+
+      if humanoid then
+        humanoid.WalkSpeed = 16
+      end
+    end
+  end)
+
+  character3:Slider("Speed", 16, 120, 16, "%d", function(walkSpeed)
+    veyronixThrowState.walkSpeed = walkSpeed
+  end)
+
+  character3:Toggle("JumpPower", "keeps jump power at the slider value (uses UseJumpPower)", false, function(jumpOn)
+    veyronixThrowState.jumpOn = jumpOn
+
+    if not jumpOn then
+      local humanoid2 = getHumanoid()
+
+      if humanoid2 then
+        humanoid2.JumpPower = 50
+      end
+    end
+  end)
+
+  character3:Slider("Jump power", 50, 200, 50, "%d", function(jumpPower)
+    veyronixThrowState.jumpPower = jumpPower
+  end)
+
+  character3:Toggle("Infinite Jump", nil, false, function(infJump)
+    veyronixThrowState.infJump = infJump
+  end)
+
+  character3:Toggle("Noclip", "walk through walls", false, function(noclip)
+    veyronixThrowState.noclip = noclip
+  end)
+
+  character3:Toggle("Anti-AFK", "prevents idle disconnection", false, function(antiAfk)
+    veyronixThrowState.antiAfk = antiAfk
+  end)
+
+  getConnect(runService.Heartbeat:Connect(function()
+    local humanoid3 = getHumanoid()
+
+    if not humanoid3 then
+      return
+    end
+
+    if veyronixThrowState.walkOn and humanoid3.WalkSpeed ~= veyronixThrowState.walkSpeed then
+      humanoid3.WalkSpeed = veyronixThrowState.walkSpeed
+    end
+
+    if veyronixThrowState.jumpOn then
+      if humanoid3.UseJumpPower == false then
+        humanoid3.UseJumpPower = true
+      end
+
+      if humanoid3.JumpPower ~= veyronixThrowState.jumpPower then
+        humanoid3.JumpPower = veyronixThrowState.jumpPower
+      end
+    end
+  end))
+
+  getConnect(userInputService.JumpRequest:Connect(function()
+    if not veyronixThrowState.infJump then
+      return
+    end
+
+    local humanoid4 = getHumanoid()
+
+    if humanoid4 then
+      humanoid4:ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+  end))
+
+  getConnect(runService.Stepped:Connect(function()
+    if not veyronixThrowState.noclip then
+      return
+    end
+
+    local character4 = localPlayer3.Character
+
+    if not character4 then
+      return
+    end
+
+    for _, value11 in ipairs(character4:GetDescendants()) do
+      if value11:IsA("BasePart") and value11.CanCollide then
+        value11.CanCollide = false
+      end
+    end
+  end))
+
+  getConnect(localPlayer3.Idled:Connect(function()
+    if not veyronixThrowState.antiAfk then
+      return
+    end
+
+    local ok25, result20 = pcall(function() return virtualUser end)
+
+    if ok25 and result20 then
+      pcall(function()
+        result20:CaptureController()
+        result20:ClickButton2(Vector2.new())
+      end)
+    end
+  end))
+
+  local
+    enableTheSpyThrowFoodNormallyAndInspectTheCapturedCallsTheHookStaysInstalledUntilYouLeaveTheGameDisablingTheSpyStopsRecording
+
+  local flag6 = false
+
+  local function f35()
+    if flag6 then
+      return true, "already installed"
+    end
+
+    if not (hookmetamethod and getnamecallmethod and newcclosure and checkcaller) then
+      return false, "executor does not support hookmetamethod/getnamecallmethod/newcclosure/checkcaller"
+    end
+
+    local v137
+
+    v137 = hookmetamethod(game, "__namecall", newcclosure(function(instance25, ...)
+      local alive = veyronixThrowState.alive
+      local v138, packed2
+
+      if alive and veyronixThrowState.spyOn then
+        v138 = getnamecallmethod()
+
+        if (v138 == "FireServer" or v138 == "InvokeServer") and not checkcaller() then
+          local ok26, result21 = pcall(function()
+            return typeof(instance25) == "Instance"
+              and (instance25:IsA("RemoteEvent") or instance25:IsA("RemoteFunction"))
+          end)
+
+          if ok26 and result21 then
+            packed2 = table.pack(...)
+
+            task.defer(function()
+              local ok27, result22 = pcall(function() return instance25:GetFullName() end)
+
+              local v139 = {
+                remote = instance25,
+                args = packed2,
+                method = v138,
+                path = ok27 and result22 or instance25.Name,
+                t = os.clock(),
+              }
+
+              table.insert(veyronixThrowState.log, 1, v139)
+
+              if #veyronixThrowState.log > veyronixThrowState.logMax then
+                table.remove(veyronixThrowState.log)
+              end
+
+              veyronixThrowState.logDirty = true
+            end)
+          end
+        end
+      end
+
+      return v137(instance25, ...)
+    end))
+
+    flag6 = true
+    return true, "ok"
+  end
+
+  local function f36(instance26, p131)
+    local v140 = typeof(instance26)
+    local v141 = p131 or 0
+
+    if v140 == "string" then
+      return string.format(
+        "%q", #instance26 > 60 and instance26:sub(1, 60) .. "…" or instance26
+      )
+    elseif v140 == "table" then
+      if v141 >= 2 then
+        return "{…}"
+      end
+
+      local list8 = {}
+      local count5 = 0
+
+      for key15, value12 in pairs(instance26) do
+        count5 = count5 + 1
+
+        if count5 > 6 then
+          list8[#list8 + 1] = "…"
+          break
+        end
+
+        list8[#list8 + 1] = "[" .. f36(key15, v141 + 1) .. "]=" .. f36(value12, v141 + 1)
+      end
+
+      return "{" .. table.concat(list8, ", ") .. "}"
+    end
+
+    if v140 == "Instance" then
+      local ok28, result23 = pcall(function() return instance26:GetFullName() end)
+      return "<" .. instance26.ClassName .. " " .. (ok28 and result23 or instance26.Name) .. ">"
+    end
+
+    return tostring(instance26)
+  end
+
+  local function getJoined(args)
+    local v142 = {}
+
+    for k = 1, args.n do
+      v142[k] = f36(args[k])
+    end
+
+    return table.concat(v142, ", ")
+  end
+
+  local remoteSPY = tab6:Card("REMOTE SPY")
+  enableTheSpyThrowFoodNormallyAndInspectTheCapturedCallsTheHookStaysInstalledUntilYouLeaveTheGameDisablingTheSpyStopsRecording = remoteSPY:Label("Enable the spy, throw food normally and inspect the captured calls. The hook stays installed until you leave the game; disabling the spy stops recording.")
+
+  remoteSPY:Toggle("Enable spy", "records game FireServer / InvokeServer calls", false, function(p132)
+    if p132 then
+      local v143, v144 = f35()
+
+      if not v143 then
+        local v145 = enableTheSpyThrowFoodNormallyAndInspectTheCapturedCallsTheHookStaysInstalledUntilYouLeaveTheGameDisablingTheSpyStopsRecording
+        local color32 = Color3
+        v145:Set("Spy unavailable: " .. v144, color32.fromRGB(240, 90, 90))
+        veyronixThrowState.spyOn = false
+        return
+      end
+
+      veyronixThrowState.spyOn = true
+
+      enableTheSpyThrowFoodNormallyAndInspectTheCapturedCallsTheHookStaysInstalledUntilYouLeaveTheGameDisablingTheSpyStopsRecording:Set("Spy recording…", Color3.fromRGB(
+        0, 230, 118
+      ))
+    else
+      veyronixThrowState.spyOn = false
+      enableTheSpyThrowFoodNormallyAndInspectTheCapturedCallsTheHookStaysInstalledUntilYouLeaveTheGameDisablingTheSpyStopsRecording:Set("Spy stopped.")
+    end
+  end)
+
+  remoteSPY:Button("Clear log", function()
+    veyronixThrowState.log = {}
+    veyronixThrowState.logDirty = true
+  end)
+
+  remoteSPY:Button("Copy log to clipboard", function()
+    local v146 = {}
+
+    for index2, value13 in ipairs(veyronixThrowState.log) do
+      v146[index2] = string.format(
+        "%s:%s(%s)", value13.path, value13.method, getJoined(value13.args)
+      )
+    end
+
+    if setclipboard then
+      setclipboard(table.concat(v146, "\n"))
+      instance23:Toast("Log copied", #v146 .. " calls")
+    else
+      warn("[Veyronix] executor does not support setclipboard")
+    end
+  end)
+
+  remoteSPY:Button("Copy ReplicatedStorage remote list", function()
+    local list9 = {}
+
+    for _, value14 in ipairs(replicatedStorage:GetDescendants()) do
+      if value14:IsA("RemoteEvent") or value14:IsA("RemoteFunction")
+        or value14:IsA("UnreliableRemoteEvent") then
+        list9[#list9 + 1] = value14.ClassName .. "  " .. value14:GetFullName()
+      end
+    end
+
+    table.sort(list9)
+    local joined = table.concat(list9, "\n")
+
+    if setclipboard then
+      setclipboard(joined)
+    end
+
+    print("[Veyronix] " .. #list9 .. [[
+ remotes:
+]] .. joined)
+
+    instance23:Toast("Remotes listed", #list9 .. " (also in the F9 console)")
+  end)
+
+  remoteSPY:Label("Auto replay target: (none)")
+
+  tab6:Card("RECENT CALLS  (click to select the Auto replay target)")
+  local v147 = task
+  local card = tab2.Card
+
+  v147.spawn(function()
+    while veyronixThrowState.alive do
+      if veyronixThrowState.logDirty then
+        veyronixThrowState.logDirty = false
+      end
+
+      task.wait(0.5)
+    end
+  end)
+
+  local v148 = card(tab2, "AUTO FARM")
+
+  f14(
+    v148, "FarmAnimals", "Farm Animals",
+    "repeats throws with a peak tap (unavailable while training)", "FarmAnimals"
+  )
+
+  getSlider(v148, "FarmPause", "Extra pause between throws (s)", 0, 20, 2, "%d")
+
+  veyronixThrowState.farmLbl = v148:Label("Farm: disabled")
+
+
+  -- Auto Farm now uses the configured fixed throw-area position above.
+
+  local function getFindFirstChild3()
+    if not v73.ThrowRemotePath then
+      return nil
+    end
+
+    local findFirstChild6 = replicatedStorage
+
+    for _, value15 in ipairs(v73.ThrowRemotePath) do
+      findFirstChild6 = findFirstChild6:FindFirstChild(value15)
+
+      if not findFirstChild6 then
+        return nil
+      end
+    end
+
+    if findFirstChild6:IsA("RemoteEvent") or findFirstChild6:IsA("RemoteFunction") then
+      return findFirstChild6
+    end
+
+    return nil
+  end
+
+  local selectATargetInReconOrSetCONFIGThrowRemotePathInTheCode
+
+  local function f37()
+    local findFirstChild7 = getFindFirstChild3()
+    local remote, packed3
+
+    if findFirstChild7 then
+      remote = findFirstChild7
+
+      packed3 = v73.ThrowArgs and table.pack(v73.ThrowArgs())
+        or veyronixThrowState.selected and veyronixThrowState.selected.args
+    elseif veyronixThrowState.selected then
+      remote = veyronixThrowState.selected.remote
+      packed3 = veyronixThrowState.selected.args
+    end
+
+    if not remote or not remote.Parent then
+      return false, "no target (select a remote in Recon) or the remote was destroyed"
+    end
+
+    if not packed3 then
+      return false, "no arguments available for the remote"
+    end
+
+    local v149, v150
+
+    if remote:IsA("RemoteFunction") then
+      v149, v150 = pcall(remote.InvokeServer, remote, table.unpack(packed3, 1, packed3.n))
+    else
+      v149, v150 = pcall(remote.FireServer, remote, table.unpack(packed3, 1, packed3.n))
+    end
+
+    if not v149 then
+      return false, tostring(v150)
+    end
+
+    return true
+  end
+
+  local autoREPLAYUsesTheTargetSelectedInRecon = tab2:Card("AUTO REPLAY  (uses the target selected in Recon)")
+  selectATargetInReconOrSetCONFIGThrowRemotePathInTheCode = autoREPLAYUsesTheTargetSelectedInRecon:Label("Select a target in Recon (or set CONFIG.ThrowRemotePath in the code).")
+
+  autoREPLAYUsesTheTargetSelectedInRecon:Toggle("Auto replay", "repeats the selected call at the interval below", false, function(replayOn)
+    veyronixThrowState.replayOn = replayOn
+
+    if replayOn and not (veyronixThrowState.selected or getFindFirstChild3()) then
+      selectATargetInReconOrSetCONFIGThrowRemotePathInTheCode:Set(
+        "No target — select a remote in Recon first.", Color3.fromRGB(255, 200, 90)
+      )
+    end
+  end)
+
+  autoREPLAYUsesTheTargetSelectedInRecon:Slider("Interval (s)", 0.1, 5, 1, "%.1f", function(replayDelay)
+    veyronixThrowState.replayDelay = replayDelay
+  end)
+
+  autoREPLAYUsesTheTargetSelectedInRecon:Button("Run once", function()
+    local v151, v152 = f37()
+
+    selectATargetInReconOrSetCONFIGThrowRemotePathInTheCode:Set(v151
+        and "Call sent (does not confirm an effect in the game)."
+      or "Failed: " .. tostring(v152), v151
+        and Color3.fromRGB(150, 150, 160)
+      or Color3.fromRGB(240, 90, 90))
+  end)
+
+  task.spawn(function()
+    while veyronixThrowState.alive do
+      if veyronixThrowState.replayOn then
+        local v153, v154 = f37()
+
+        if v153 then
+          veyronixThrowState.replayCount = veyronixThrowState.replayCount + 1
+
+          selectATargetInReconOrSetCONFIGThrowRemotePathInTheCode:Set("Auto replay: "
+            .. veyronixThrowState.replayCount .. " calls sent", Color3.fromRGB(0, 230, 118))
+        else
+          veyronixThrowState.replayOn = false
+          local v155 = selectATargetInReconOrSetCONFIGThrowRemotePathInTheCode
+          local v156 = tostring(v154)
+          local color33 = Color3
+          v155:Set("Stopped: " .. v156, color33.fromRGB(240, 90, 90))
+        end
+
+        task.wait(veyronixThrowState.replayDelay)
+      else
+        task.wait(0.25)
+      end
+    end
+  end)
+
+  local buy = tab3:Card("BUY")
+  buy:Divider("Bars  (Stand_Upgrade: Wooden Bar > Steel Bar > ...)")
+
+  f14(buy, "UpBars", "Auto Upgrade", "buys the next bar when you can afford it", "UpgradeBars")
+  buy:Divider("Plot  (Plot_UpgradeFence: more plot space)")
+  f14(buy, "UpPlot", "Auto Upgrade", "requires being near the sign", "UpgradePlot")
+  buy:Divider("Food  (Shop_Buy: next food)")
+  f14(buy, "UpFood", "Auto Upgrade", "buys the next food when you can afford it", "UpgradeFood")
+  buy:Divider("Options")
+
+  getToggle(
+    buy, "TeleportSpots", "Teleport to the sign before buying",
+    "Plot/Bars require proximity; teleports, buys and returns", true
+  )
+
+  local function f38(p133, list10)
+    local list11 = { p133 }
+
+    if type(list10) == "table" then
+      for _, value16 in ipairs(list10) do
+        list11[#list11 + 1] = tostring(value16)
+      end
+    end
+
+    return list11
+  end
+
+  local function f39(p134, p135, p136, p137)
+    local function matches(value, selected, wildcard)
+      if type(selected) ~= "table" then
+        return selected == nil or selected == wildcard or tostring(value) == tostring(selected)
+      end
+      if #selected == 0 then return true end
+      for _, choice in ipairs(selected) do
+        if choice == wildcard or tostring(value) == tostring(choice) then return true end
+      end
+      return false
+    end
+
+    if not matches(p134.Mutation or "None", p135, "Any") then return false end
+    if not matches(p134.Rarity, p136, "Not Set") then return false end
+    if not matches(p134.Name, p137, "Not Set") then return false end
+    return true
+  end
+
+  local f40
+
+  local function f41()
+    local v157 = f12(map2.SellCPS)
+    local v158 = f12(map2.SellWeight)
+    local list12 = {}
+
+    if v157 then
+      list12[#list12 + 1] = "CPS<" .. map2.SellCPS
+    end
+
+    if v158 and v158 > 0 then
+      list12[#list12 + 1] = "weight<" .. map2.SellWeight
+    end
+
+    return f40(
+      map2.SellMutation, map2.SellRarity, map2.SellAnimal,
+      #list12 > 0 and table.concat(list12, ", ") or nil, "Selling"
+    )
+  end
+
+  function f40(p138, p139, p140, p141, p142)
+    local list13 = {}
+
+    local function addSelection(label, value, wildcard)
+      if type(value) == "table" then
+        if #value > 0 then list13[#list13 + 1] = label .. "=" .. table.concat(value, "|") end
+      elseif value ~= nil and value ~= wildcard then
+        list13[#list13 + 1] = label .. "=" .. tostring(value)
+      end
+    end
+    addSelection("mutation", p138, "Any")
+    addSelection("rarity", p139, "Not Set")
+    addSelection("animal", p140, "Not Set")
+
+    if p141 then
+      list13[#list13 + 1] = p141
+    end
+
+    if #list13 == 0 then
+      return p142 .. " all animals"
+    end
+
+    return p142 .. ": " .. table.concat(list13, ", ")
+  end
+
+  local function f42()
+    local v159 = f12(map2.SellCPS)
+    local v160 = f12(map2.SellWeight)
+
+    local function selected(value, wildcard)
+      return type(value) == "table" and #value > 0
+        or type(value) ~= "table" and value ~= nil and value ~= wildcard
+    end
+    return selected(map2.SellMutation, "Any") or selected(map2.SellRarity, "Not Set")
+      or selected(map2.SellAnimal, "Not Set") or v159 ~= nil or v160 ~= nil and v160 > 0
+  end
+
+  local function f43(list14)
+    local v161 = f12(map2.SellCPS)
+    local v162 = f12(map2.SellWeight)
+    local list15 = {}
+
+    for _, value17 in ipairs(list14) do
+      if f39(value17, map2.SellMutation, map2.SellRarity, map2.SellAnimal)
+        and (v161 == nil or type(value17.CPS) == "number" and value17.CPS < v161)
+        and (v162 == nil or v162 <= 0
+          or type(value17.Weight) == "number" and value17.Weight < v162) then
+        list15[#list15 + 1] = value17
+      end
+    end
+
+    return list15
+  end
+
+  local f44
+
+  local function f45(p143)
+    if not f44() then
+      return false
+    end
+
+    if p143 and not f42() then
+      return false
+    end
+
+    local v163 = v74.Data.GetAnimals()
+
+    if type(v163) ~= "table" then
+      return false
+    end
+
+    local v164 = f43(v163)
+
+    if #v164 == 0 then
+      return false
+    end
+
+    return v74.Sell(v164) == true
+  end
+
+  function f44()
+    return type(v74.Data.GetAnimals) == "function" and type(v74.Sell) == "function"
+  end
+
+  local selling = tab4:Card("SELLING")
+  local filtersCurrentSellingAllAnimals = selling:Label("Filters — Current : Selling all animals")
+
+  local function f46()
+    filtersCurrentSellingAllAnimals:Set("Current : " .. f41())
+  end
+
+  selling:Divider("Filters")
+
+  getMultiDropdown(selling, "SellMutation", "Mutations (multi-select)", v74.Data.Mutations or {}, {}, f46)
+
+  getMultiDropdown(
+    selling, "SellRarity", "Rarity (multi-select)", v74.Data.Rarities or {}, {}, f46
+  )
+
+  getMultiDropdown(
+    selling, "SellAnimal", "Animals (multi-select)", v74.Data.Animals or {}, {}, f46
+  )
+
+  getInput(selling, "SellCPS", "Sell Below CPS", "1K", "", f46)
+  getInput(selling, "SellWeight", "Sell Below Weight", "0", "", f46)
+
+  selling:Divider("Start")
+  local now = 0
+
+  selling:Button("Sell", function()
+    if not f44() then
+      instance23:Toast("Not configured", "GAME.Data.GetAnimals and GAME.Sell = nil", 4)
+      return
+    end
+
+    if not f42() and os.clock() - now > 5 then
+      now = os.clock()
+
+      instance23:Toast(
+        "No filters = sell ALL", "click Sell again within 5 seconds to confirm", 5
+      )
+
+      return
+    end
+
+    instance23:Toast("Sell", f45(false) and "sent" or "nothing sold")
+  end)
+
+  getToggle(selling, "AutoSellOn", "Auto Sell", "requires at least one filter", false, function(p144, p145)
+    if p144 and not f44() then
+      instance23:Toast(
+        "Not configured", "Auto Sell: GAME.Data.GetAnimals and GAME.Sell = nil", 4
+      )
+
+      map2.AutoSellOn = false
+      p145.Set(false, true)
+      return
+    end
+
+    if p144 and not f42() then
+      instance23:Toast("Auto Sell", "set at least one filter to avoid selling everything", 4)
+      map2.AutoSellOn = false
+      p145.Set(false, true)
+      return
+    end
+
+    map3.AutoSellOn = (map3.AutoSellOn or 0) + 1
+    local autoSellOn = map3.AutoSellOn
+
+    if not p144 then
+      return
+    end
+
+    instance23:Toast("Auto Sell on", f41(), 4)
+
+    task.spawn(function()
+      while veyronixThrowState.alive and map2.AutoSellOn and map3.AutoSellOn == autoSellOn do
+        local ok29, result24 = pcall(f45, true)
+
+        if not ok29 then
+          instance23:Toast("Auto Sell error", tostring(result24):sub(1, 50), 5)
+          map2.AutoSellOn = false
+          p145.Set(false, true)
+          break
+        end
+
+        task.wait(v74.Features.AutoSell.interval)
+      end
+    end)
+  end)
+
+  local v165 = request or http_request or syn and syn.request or http and http.request
+
+  local function f47(webhookURL)
+    if type(webhookURL) ~= "string" then
+      return false
+    end
+
+    return webhookURL:match("^https://[%w%.]*discord%.com/api/webhooks/%d+/[%w_%-]+$") ~= nil
+      or webhookURL:match("^https://[%w%.]*discordapp%.com/api/webhooks/%d+/[%w_%-]+$") ~= nil
+  end
+
+  local function f48(p146)
+    if not v165 then
+      return false, "executor does not support request/http_request"
+    end
+
+    if not f47(map2.WebhookURL) then
+      return false, "Invalid webhook URL"
+    end
+
+    local ok30, result25 = pcall(v165, {
+      Url = map2.WebhookURL,
+      Method = "POST",
+      Headers = { ["Content-Type"] = "application/json" },
+      Body = httpService:JSONEncode({ username = "Veyronix Hub", embeds = { p146 } }),
+    })
+
+    if not ok30 then
+      return false, tostring(result25)
+    end
+
+    local statusCode = result25 and (result25.StatusCode or result25.status_code) or 0
+
+    if statusCode >= 200 and statusCode < 300 then
+      return true, "ok"
+    end
+
+    return false, "HTTP " .. tostring(statusCode)
+  end
+
+  local setup = tab5:Card("SETUP")
+  getInput(setup, "WebhookURL", "Webhook URL", "https://discord.com/api/webhooks/...", "")
+
+  setup:Button("Send Test Message", function()
+    local v166, v167 = f48({
+      title = "Test - Veyronix Hub",
+      description = "Webhook is working.",
+      color = 58998,
+      fields = {
+        { name = "Player", value = localPlayer3.Name, inline = true },
+        { name = "PlaceId", value = tostring(game.PlaceId), inline = true },
+      },
+    })
+
+    instance23:Toast("Webhook", v166 and "test message sent" or "failed: " .. v167, 4)
+  end)
+
+  local webhooks = tab5:Card("WEBHOOKS")
+  local filtersCurrentWebhooksForAllAnimals = webhooks:Label("Filters — Current : Webhooks for all animals")
+
+  local function f49()
+    local v168 = f12(map2.HookCPS)
+    local v169 = f12(map2.HookWeight)
+    local list16 = {}
+
+    if v168 and v168 > 0 then
+      list16[#list16 + 1] = "CPS>=" .. map2.HookCPS
+    end
+
+    if v169 and v169 > 0 then
+      list16[#list16 + 1] = "weight>=" .. map2.HookWeight
+    end
+
+    filtersCurrentWebhooksForAllAnimals:Set("Current : " .. f40(
+      map2.HookMutation, map2.HookRarity, map2.HookAnimal,
+      #list16 > 0 and table.concat(list16, ", ") or nil, "Webhooks for"
+    ))
+  end
+
+  webhooks:Divider("Filters")
+
+  getDropdown(webhooks, "HookMutation", "Mutations", f38("Any", v74.Data.Mutations), "Any", f49)
+
+  getDropdown(
+    webhooks, "HookRarity", "Rarity", f38("Not Set", v74.Data.Rarities), "Not Set", f49
+  )
+
+  getDropdown(
+    webhooks, "HookAnimal", "Animals", f38("Not Set", v74.Data.Animals), "Not Set", f49
+  )
+
+  getInput(webhooks, "HookCPS", "Webhook Above CPS", "0", "", f49)
+  getInput(webhooks, "HookWeight", "Webhook Above Weight", "0", "", f49)
+
+  webhooks:Divider("Start")
+
+  getToggle(webhooks, "WebhookOn", "Enable Webhook", "notifies you when a new animal matches the filters", false, function(p147, p148)
+    if p147 and type(v74.Data.GetAnimals) ~= "function" then
+      instance23:Toast("Not configured", "GAME.Data.GetAnimals = nil", 4)
+      map2.WebhookOn = false
+      p148.Set(false, true)
+      return
+    end
+
+    if p147 and not f47(map2.WebhookURL) then
+      instance23:Toast("Webhook", "enter a valid webhook URL", 4)
+      map2.WebhookOn = false
+      p148.Set(false, true)
+      return
+    end
+
+    map3.WebhookOn = (map3.WebhookOn or 0) + 1
+    local webhookOn = map3.WebhookOn
+
+    if not p147 then
+      return
+    end
+
+    task.spawn(function()
+      local flag7 = false
+      local v170 = {}
+
+      while veyronixThrowState.alive and map2.WebhookOn and map3.WebhookOn == webhookOn do
+        local ok31, animals3 = pcall(v74.Data.GetAnimals)
+
+        if ok31 and type(animals3) == "table" then
+          local count6 = 0
+          local v171 = f12(map2.HookCPS) or 0
+          local v172 = f12(map2.HookWeight) or 0
+
+          for _, value18 in ipairs(animals3) do
+            if value18.Id ~= nil and not v170[value18.Id] then
+              v170[value18.Id] = true
+
+              if flag7 and count6 < 5
+                and f39(value18, map2.HookMutation, map2.HookRarity, map2.HookAnimal)
+                and (type(value18.CPS) ~= "number" or value18.CPS >= v171)
+                and (type(value18.Weight) ~= "number" or value18.Weight >= v172) then
+                count6 = count6 + 1
+
+                f48({
+                  title = "New animal: " .. tostring(value18.Name),
+                  color = 58998,
+                  fields = {
+                    { name = "Rarity", value = tostring(value18.Rarity), inline = true },
+                    {
+                      name = "Mutation",
+                      value = tostring(value18.Mutation or "None"),
+                      inline = true,
+                    },
+                    { name = "CPS", value = tostring(value18.CPS), inline = true },
+                    { name = "Weight", value = tostring(value18.Weight), inline = true },
+                  },
+                })
+
+                task.wait(1.2)
+              end
+            end
+          end
+
+          flag7 = true
+        end
+
+        task.wait(5)
+      end
+    end)
+  end)
+
+  local map4 = setmetatable({}, { __mode = "k" })
+  local connect6
+
+  local function f50(key16)
+    if key16:IsA("ProximityPrompt") then
+      if map4[key16] == nil then
+        map4[key16] = key16.HoldDuration
+      end
+
+      key16.HoldDuration = 0
+    end
+  end
+
+  local function f51(p149)
+    if connect6 then
+      connect6:Disconnect()
+      connect6 = nil
+    end
+
+    if p149 then
+      for _, value19 in ipairs(workspace:GetDescendants()) do
+        f50(value19)
+      end
+
+      connect6 = workspace.DescendantAdded:Connect(f50)
+    else
+      for key17, value20 in pairs(map4) do
+        if key17.Parent then
+          key17.HoldDuration = value20
+        end
+
+        map4[key17] = nil
+      end
+    end
+  end
+
+  local map5 = setmetatable({}, { __mode = "k" })
+
+  local function f52(key18)
+    if (key18:IsA("BasePart") or key18:IsA("Decal") or key18:IsA("Texture"))
+      and map5[key18] == nil then
+      map5[key18] = key18.Transparency
+      key18.Transparency = 1
+    end
+  end
+
+  local list17 = {}
+  local f53
+
+  local function f54(p150)
+    if p150 == localPlayer3 then
+      return
+    end
+
+    if p150.Character then
+      f53(p150.Character)
+    end
+
+    local v173 = list17
+    local v174 = #list17
+    local characterAdded = p150.CharacterAdded
+    v173[v174 + 1] = characterAdded:Connect(f53)
+  end
+
+  function f53(instance27)
+    for _, value21 in ipairs(instance27:GetDescendants()) do
+      f52(value21)
+    end
+
+    local v175 = list17
+    local v176 = #list17
+    local descendantAdded = instance27.DescendantAdded
+    v175[v176 + 1] = descendantAdded:Connect(f52)
+  end
+
+  local function f55(p151)
+    for _, value22 in ipairs(list17) do
+      value22:Disconnect()
+    end
+
+    list17 = {}
+
+    if p151 then
+      for _, value23 in ipairs(players:GetPlayers()) do
+        f54(value23)
+      end
+
+      local v177 = list17
+      local v178 = #list17
+      local playerAdded = players.PlayerAdded
+      v177[v178 + 1] = playerAdded:Connect(f54)
+    else
+      for key19, value24 in pairs(map5) do
+        if key19.Parent then
+          key19.Transparency = value24
+        end
+
+        map5[key19] = nil
+      end
+    end
+  end
+
+  local textLabel21 = Instance.new("TextLabel")
+  textLabel21.Size = UDim2.new(0, 200, 0, 22)
+  textLabel21.Position = UDim2.new(0, 10, 0, 10)
+  textLabel21.BackgroundColor3 = result7.C.bgCard
+  textLabel21.BackgroundTransparency = 0.2
+  textLabel21.BorderSizePixel = 0
+  textLabel21.Font = Enum.Font.Code
+  textLabel21.TextSize = 12
+  textLabel21.TextColor3 = result7.C.accent
+  textLabel21.Text = ""
+  textLabel21.Visible = false
+  textLabel21.Parent = instance23.Gui
+
+  local uiCorner2 = Instance.new("UICorner")
+  uiCorner2.CornerRadius = UDim.new(0, 6)
+  uiCorner2.Parent = textLabel21
+
+  local now2 = os.clock()
+  local v179 = 0
+  local v180 = now2
+
+  getConnect(runService.RenderStepped:Connect(function()
+    v179 = v179 + 1
+    local now3 = os.clock()
+
+    if now3 - v180 >= 0.5 then
+      local v181 = v179 / (now3 - v180)
+      v179 = 0
+      v180 = now3
+      local list18 = {}
+
+      if map2.ShowFPS then
+        list18[#list18 + 1] = string.format("FPS %d", v181 + 0.5)
+      end
+
+      if map2.ShowPing then
+        local ok32, result26 = pcall(function()
+          return statsService.Network.ServerStatsItem["Data Ping"]:GetValue()
+        end)
+
+        list18[#list18 + 1] = ok32 and string.format("Ping %d ms", result26 + 0.5) or "Ping n/a"
+      end
+
+      textLabel21.Text = table.concat(list18, "  |  ")
+      textLabel21.Visible = #list18 > 0
+    end
+  end))
+
+  local v182 = type(writefile) == "function" and type(readfile) == "function"
+    and type(isfolder) == "function" and type(makefolder) == "function"
+    and type(isfile) == "function" and type(listfiles) == "function"
+    and type(delfile) == "function"
+
+  local function f56()
+    if not isfolder("VeyronixHub") then
+      makefolder("VeyronixHub")
+    end
+
+    if not isfolder("VeyronixHub/ThrowFood") then
+      makefolder("VeyronixHub/ThrowFood")
+    end
+  end
+
+  local function getGsub(p152)
+    return (tostring(p152 or ""):gsub("[^%w_%-]", ""))
+  end
+
+  local function f57(jsonDecode)
+    if type(jsonDecode) ~= "table" then
+      return false
+    end
+
+    for key20, value25 in pairs(jsonDecode) do
+      local v183 = v75[key20]
+
+      if v183 and not v76[key20] and typeof(value25) == v183.kind then
+        pcall(v183.set, value25)
+      end
+    end
+
+    return true
+  end
+
+  local function f58(selectedConfig)
+    return "VeyronixHub/ThrowFood" .. "/" .. selectedConfig .. ".json"
+  end
+
+  local function f59(p153)
+    local v184 = {}
+
+    for key21, value26 in pairs(map2) do
+      if v75[key21] and not v76[key21] and not (p153 and v77[key21]) then
+        v184[key21] = value26
+      end
+    end
+
+    return v184
+  end
+
+  local function f60(p154, selectedConfig2)
+    if v182 then
+      pcall(function()
+        f56()
+        writefile("VeyronixHub/ThrowFood" .. "/" .. p154, selectedConfig2)
+      end)
+    end
+  end
+
+  local hub = tab7:Card("VEYRONIX HUB")
+  hub:Label("Veyronix Hub  ·  Free & Open  ·  No key required")
+  hub:Label("Game: Throw Food For Animals")
+  hub:Button("💬 Discord  —  discord.gg/ZN4jtyPNHG  (click to copy)", function()
+    local link = "https://discord.gg/CtgwhkBda"
+    if type(setclipboard) == "function" then
+      setclipboard(link)
+      instance23:Toast("Discord", "link copied to clipboard!", 3)
+    else
+      instance23:Toast("Discord", link, 4)
+    end
+    pcall(function() guiService:OpenBrowserWindow(link) end)
+  end)
+  hub:Button("Close Hub", function() instance23:Destroy() end)
+
+  tab7:Card("KEYBINDS"):Keybind("Toggle UI", Enum.KeyCode.RightShift, function(p155)
+    instance23:SetToggleKey(p155)
+  end)
+
+  getToggle(
+    tabPerf:Card("MISC"), "QuickInteract", "Quick Interact",
+    "removes the ProximityPrompt hold duration", false, f51
+  )
+
+  local performance = tabPerf:Card("PERFORMANCE")
+
+  getToggle(
+    performance, "HidePlayers", "Hide Players", "hides other players locally", false, f55
+  )
+
+  getToggle(
+    performance, "ReduceCPU", "Reduce CPU Usage", "disables 3D rendering and caps FPS", false,
+    function(p156) end
+  )
+
+  getSlider(performance, "FpsCap", "FPS Cap", 15, 240, 240, "%d", function() end)
+
+  getToggle(performance, "ShowFPS", "Show FPS", nil, false)
+  getToggle(performance, "ShowPing", "Show Ping", nil, false)
+
+  performance:Button("Anti Lag", function()
+    pcall(function() settings().Rendering.QualityLevel = Enum.QualityLevel.Level01 end)
+
+    pcall(function()
+      lighting.GlobalShadows = false
+      lighting.FogEnd = 9000000000
+    end)
+
+    local count7 = 0
+
+    for _, value27 in ipairs(workspace:GetDescendants()) do
+      if value27:IsA("ParticleEmitter") or value27:IsA("Trail") or value27:IsA("Beam")
+        or value27:IsA("Smoke") or value27:IsA("Fire") or value27:IsA("Sparkles") then
+        value27.Enabled = false
+      end
+
+      count7 = count7 + 1
+
+      if count7 % 500 == 0 then
+        task.wait()
+      end
+    end
+
+    for _, value28 in ipairs(lighting:GetChildren()) do
+      if value28:IsA("PostEffect") then
+        value28.Enabled = false
+      end
+    end
+
+    instance23:Toast("Anti Lag", "applied (lasts until you rejoin the game)")
+  end)
+
+  local config = tab7:Card("CONFIG")
+  getInput(config, "ConfigName", "Config Name", "VeyronixHub", "")
+  local v185
+
+  local function f61()
+    if not v182 then
+      instance23:Toast("Config", "executor does not support file APIs", 4)
+    end
+
+    return v182
+  end
+
+  local function f62()
+    if not v182 then
+      return
+    end
+
+    local list19 = {}
+
+    pcall(function()
+      f56()
+
+      for _, value29 in ipairs(listfiles("VeyronixHub/ThrowFood")) do
+        local json = tostring(value29):match("([^/\\]+)%.json$")
+
+        if json then
+          list19[#list19 + 1] = json
+        end
+      end
+    end)
+
+    table.sort(list19)
+    v185.SetOptions(#list19 > 0 and list19 or { "None" }, true)
+    map2.SelectedConfig = v185.Get()
+  end
+
+  config:Button("Save Config", function()
+    if not f61() then
+      return
+    end
+
+    local gsub = getGsub(map2.ConfigName)
+
+    if gsub == "" then
+      gsub = "VeyronixHub"
+    end
+
+    f56()
+    writefile(f58(gsub), httpService:JSONEncode(f59(false)))
+    f60("last.txt", gsub)
+    f62()
+    instance23:Toast("Config saved", gsub)
+  end)
+
+  v185 = getDropdown(config, "SelectedConfig", "Select Config", { "None" }, "None")
+
+  config:Button("Refresh Config List", function()
+    if f61() then
+      f62()
+    end
+  end)
+
+  local function f63(selectedConfig3)
+    if not f61() then
+      return
+    end
+
+    if selectedConfig3 == "" or selectedConfig3 == "None" or not isfile(f58(selectedConfig3)) then
+      instance23:Toast("Config", "not found", 3)
+      return
+    end
+
+    local ok33, result27 = pcall(function()
+      return httpService:JSONDecode(readfile(f58(selectedConfig3)))
+    end)
+
+    if ok33 and f57(result27) then
+      f60("last.txt", selectedConfig3)
+      instance23:Toast("Config loaded", selectedConfig3)
+    else
+      instance23:Toast("Config", "invalid file", 4)
+    end
+  end
+
+  config:Button("Load Selected Config", function() f63(map2.SelectedConfig) end)
+
+  config:Button("Delete Selected Config", function()
+    if not f61() then
+      return
+    end
+
+    local selectedConfig4 = map2.SelectedConfig
+
+    if selectedConfig4 ~= "None" and isfile(f58(selectedConfig4)) then
+      delfile(f58(selectedConfig4))
+      f62()
+      instance23:Toast("Config deleted", selectedConfig4)
+    end
+  end)
+
+  local v186
+
+  v186 = getToggle(config, "AutoLoad", "Enable Auto Load", "loads the selected config when the hub opens", false, function(p157, p158)
+    if not f61() then
+      map2.AutoLoad = false
+      p158.Set(false, true)
+      return
+    end
+
+    if p157 then
+      local selectedConfig5 = map2.SelectedConfig ~= "None" and map2.SelectedConfig
+        or getGsub(map2.ConfigName)
+
+      if selectedConfig5 == "" or not isfile(f58(selectedConfig5)) then
+        instance23:Toast("Auto load", "save or select a config first", 4)
+        map2.AutoLoad = false
+        p158.Set(false, true)
+        return
+      end
+
+      f60("autoload.txt", selectedConfig5)
+      instance23:Toast("Auto load", selectedConfig5)
+    else
+      pcall(function()
+        if isfile("VeyronixHub/ThrowFood/autoload.txt") then
+          delfile("VeyronixHub/ThrowFood/autoload.txt")
+        end
+      end)
+    end
+  end)
+
+  config:Button("Load Last Config", function()
+    if not f61() then
+      return
+    end
+
+    if isfile("VeyronixHub/ThrowFood/last.txt") then
+      f63(getGsub(readfile("VeyronixHub/ThrowFood/last.txt")))
+    else
+      instance23:Toast("Config", "no config has been used yet", 3)
+    end
+  end)
+
+  config:Button("Export Config (clipboard, excludes webhook URL)", function()
+    local jsonEncode2 = httpService:JSONEncode(f59(true))
+
+    if type(setclipboard) == "function" then
+      setclipboard(jsonEncode2)
+      instance23:Toast("Config exported", "copied to clipboard")
+    else
+      instance23:Toast("Config", "executor does not support setclipboard", 3)
+    end
+  end)
+
+  getInput(config, "ImportText", "Import Config", "paste the exported text", "")
+
+  config:Button("Import Config", function()
+    local ok34, result28 = pcall(function() return httpService:JSONDecode(map2.ImportText) end)
+
+    if ok34 and f57(result28) then
+      instance23:Toast("Config imported")
+    else
+      instance23:Toast("Config", "invalid text", 4)
+    end
+  end)
+
+  f62()
+
+  if v182 then
+    pcall(function()
+      if isfile("VeyronixHub/ThrowFood/autoload.txt") then
+        local gsub2 = getGsub(readfile("VeyronixHub/ThrowFood/autoload.txt"))
+
+        if gsub2 ~= "" and isfile(f58(gsub2)) then
+          f57(httpService:JSONDecode(readfile(f58(gsub2))))
+          map2.AutoLoad = true
+          v186.Set(true, true)
+        end
+      end
+    end)
+  end
+
+  local readingDataController = tabPerf:Card("GAME DATA"):Label("reading DataController...")
+
+  task.spawn(function()
+    while veyronixThrowState.alive do
+      local v187 = f20()
+
+      if not v187 then
+        readingDataController:Set(
+          "DataController unavailable (require failed)", Color3.fromRGB(240, 90, 90)
+        )
+      else
+        local count8 = 0
+        local count9 = 0
+        local count10 = 0
+
+        if type(v187.Animals) == "table" then
+          for _, value30 in pairs(v187.Animals) do
+            count10 = count10 + 1
+
+            if type(value30) == "table" then
+              if value30.Placed then
+                count8 = count8 + 1
+              end
+
+              if value30.Bought then
+                count9 = count9 + 1
+              end
+            end
+          end
+        end
+
+        readingDataController:Set(string.format([[
+source: DataController (game)
+Money=%s  Level=%s  Stand=%s  EquippedFood=%s
+animals=%d (placed=%d, bought=%d)]], tostring(v187.Money), tostring(v187.Level), tostring(v187.Stand), tostring(v187.EquippedFood), count10, count8, count9))
+      end
+
+      task.wait(2)
+    end
+  end)
+
+  function instance23.OnDestroy()
+    if map2.AutoTrain then
+      count3 = count3 + 1
+      local v188 = f29()
+
+      if v188 and v188.Stop and f30() then
+        pcall(v188.Stop)
+      else
+        task.spawn(f23, "Training_Stop")
+      end
+
+      local humanoidRootPart7 = getHumanoidRootPart()
+
+      if humanoidRootPart7 and veyronixThrowState.trainHome then
+        humanoidRootPart7.CFrame = veyronixThrowState.trainHome
+        veyronixThrowState.trainHome = nil
+      end
+    end
+
+    veyronixThrowState.alive = false
+    veyronixThrowState.spyOn = false
+    veyronixThrowState.replayOn = false
+    veyronixThrowState.autoPerfect = false
+
+    for key23 in pairs(map3) do
+      map3[key23] = (map3[key23] or 0) + 1
+    end
+
+    for _, value31 in ipairs(veyronixThrowState.conns) do
+      pcall(function() value31:Disconnect() end)
+    end
+
+    pcall(f51, false)
+    pcall(f55, false)
+    pcall(function() runService:Set3dRenderingEnabled(true) end)
+
+    local humanoid5 = getHumanoid()
+
+    if humanoid5 then
+      pcall(function()
+        humanoid5.WalkSpeed = 16
+        humanoid5.JumpPower = 50
+      end)
+    end
+
+    v1.VEYRONIX_LOADED = nil
+
+    v1.VEYRONIX_LOADED = nil
+    v1.VeyronixKey = nil
+  end
+
+  instance23:SelectTab("main")
+end)
+
+if not ok16 then
+  v1.VEYRONIX_LOADED = nil
+  f2("Hub startup failed: " .. tostring(result12), "error")
+else
+  f2("Throw Food For Animals is ready. Enjoy!", "ready")
+end
+
+
